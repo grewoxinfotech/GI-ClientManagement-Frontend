@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Typography, Modal, Space, message } from 'antd';
+import { Modal, message } from 'antd';
 import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { RiLayoutGridLine, RiListUnordered, RiContactsLine } from 'react-icons/ri';
+import { RiContactsLine } from 'react-icons/ri';
 import ContactList from './components/ContactList';
 import ContactForm from './components/ContactForm';
 import ContactView from './components/ContactView';
 import { ModalTitle } from '../../../../components/AdvancedForm';
+import ModuleLayout from '../../../../components/ModuleLayout';
 import {
     useGetContactsQuery,
     useDeleteContactMutation,
@@ -14,8 +15,6 @@ import {
     useUpdateContactMutation
 } from '../../../../config/api/apiServices';
 import './contact.scss';
-
-const { Title } = Typography;
 
 const Contact = () => {
     const [viewMode, setViewMode] = useState('list');
@@ -49,6 +48,10 @@ const Contact = () => {
     const handlePageChange = (page, size) => {
         setCurrentPage(page);
         setPageSize(size);
+    };
+
+    const handleViewModeChange = (mode) => {
+        setViewMode(mode);
     };
 
     const handleAdd = () => setFormModal({ visible: true, data: null });
@@ -91,40 +94,24 @@ const Contact = () => {
     };
 
     return (
-        <div className="contact">
-            <div className="contact-header">
-                <Title level={2} className="mfh_title">Contacts</Title>
-                <div className="contact-header-actions">
-                    <Space size={8}>
-                        <div className="view-toggle" data-mode={viewMode}>
-                            <button
-                                className={`btn btn-icon ${viewMode === 'list' ? 'btn-primary' : 'btn-ghost'}`}
-                                onClick={() => setViewMode('list')}
-                            >
-                                <RiListUnordered />
-                            </button>
-                            <button
-                                className={`btn btn-icon ${viewMode === 'grid' ? 'btn-primary' : 'btn-ghost'}`}
-                                onClick={() => setViewMode('grid')}
-                            >
-                                <RiLayoutGridLine />
-                            </button>
-                        </div>
-                        <button className="btn btn-primary btn-lg" onClick={handleAdd}>
-                            <PlusOutlined /> Add Contact
-                        </button>
-                    </Space>
-                </div>
-            </div>
-
+        <ModuleLayout
+            title="Contacts"
+            showViewToggle={true}
+            viewMode={viewMode}
+            onViewModeChange={handleViewModeChange}
+            onAddClick={handleAdd}
+            className="contact"
+        >
             <ContactList
                 contacts={contacts}
                 isLoading={isLoading}
                 viewMode={viewMode}
-                currentPage={currentPageFromServer}
-                pageSize={pageSize}
-                total={total}
-                onPageChange={handlePageChange}
+                pagination={{
+                    current: currentPageFromServer,
+                    pageSize: pageSize,
+                    total: total,
+                    onChange: handlePageChange
+                }}
                 onEdit={handleEdit}
                 onView={handleView}
                 onDelete={handleDelete}
@@ -172,7 +159,7 @@ const Contact = () => {
                 <p>Are you sure you want to delete contact "{deleteModal.data?.name}"?</p>
                 <p>This action cannot be undone.</p>
             </Modal>
-        </div>
+        </ModuleLayout>
     );
 };
 

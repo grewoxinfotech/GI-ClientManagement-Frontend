@@ -1,7 +1,6 @@
 import React from 'react';
-import { Card } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MdOutlineEmail, MdPhone, MdAccessTime } from 'react-icons/md';
+import ModuleCard from '../../../../../components/ModuleCard';
 
 const ContactCard = ({ contact, onEdit, onView, onDelete }) => {
     const formatDate = (timestamp) => {
@@ -12,46 +11,38 @@ const ContactCard = ({ contact, onEdit, onView, onDelete }) => {
         return date.toLocaleDateString('en-US', options);
     };
 
+    const infoItems = [
+        {
+            icon: <MdOutlineEmail />,
+            content: contact.email
+        },
+        {
+            icon: <MdPhone />,
+            content: contact.phone
+        }
+    ];
+
+    const metaItems = [
+        {
+            icon: <MdAccessTime />,
+            content: `Created ${formatDate(contact.createdAt)}`
+        },
+        {
+            icon: <MdAccessTime />,
+            content: `Updated ${formatDate(contact.updatedAt || contact.createdAt)}`
+        }
+    ];
+
     return (
-        <Card className="contact-card">
-            <div className="contact-card-header">
-                <h3 className="contact-card-title">{contact.name}</h3>
-            </div>
-
-            <div className="contact-card-content">
-                <div className="contact-card-info">
-                    <MdOutlineEmail />
-                    <span>{contact.email}</span>
-                </div>
-                <div className="contact-card-info">
-                    <MdPhone />
-                    <span>{contact.phone}</span>
-                </div>
-            </div>
-
-            <div className="contact-card-meta">
-                <div>
-                    <MdAccessTime />
-                    Created {formatDate(contact.createdAt)}
-                </div>
-                <div>
-                    <MdAccessTime />
-                    Updated {formatDate(contact.updatedAt || contact.createdAt)}
-                </div>
-            </div>
-
-            <div className="contact-card-actions">
-                <button className="btn btn-primary btn-view" onClick={() => onView(contact)}>
-                    <EyeOutlined /> View Details
-                </button>
-                <button className="btn btn-icon btn-ghost" onClick={() => onEdit(contact)}>
-                    <EditOutlined />
-                </button>
-                <button className="btn btn-icon btn-ghost delete" onClick={() => onDelete(contact)}>
-                    <DeleteOutlined />
-                </button>
-            </div>
-        </Card>
+        <ModuleCard
+            title={contact.name}
+            infoItems={infoItems}
+            metaItems={metaItems}
+            onView={onView}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            item={contact}
+        />
     );
 };
 

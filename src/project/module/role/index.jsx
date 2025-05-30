@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Typography, Modal, Space, message } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Modal, message } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
 import { RiShieldUserLine } from 'react-icons/ri';
 import RoleList from './components/RoleList';
 import RoleForm from './components/RoleForm';
 import RoleView from './components/RoleView';
 import { ModalTitle } from '../../../components/AdvancedForm';
+import ModuleLayout from '../../../components/ModuleLayout';
 import {
     useGetRolesQuery,
     useDeleteRoleMutation,
@@ -14,8 +15,6 @@ import {
     useUpdateRoleMutation
 } from '../../../config/api/apiServices';
 import './role.scss';
-
-const { Title } = Typography;
 
 const Role = () => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -89,18 +88,11 @@ const Role = () => {
     };
 
     return (
-        <div className="role">
-            <div className="role-header">
-                <Title level={2} className="mfh_title">Roles</Title>
-                <div className="role-header-actions">
-                    <Space size={8}>
-                        <button className="btn btn-primary btn-lg" onClick={handleAdd}>
-                            <PlusOutlined /> Add Role
-                        </button>
-                    </Space>
-                </div>
-            </div>
-
+        <ModuleLayout
+            title="Roles"
+            onAddClick={handleAdd}
+            className="role"
+        >
             <RoleList
                 roles={filteredRoles}
                 isLoading={isLoading}
@@ -155,7 +147,7 @@ const Role = () => {
                 <p>Are you sure you want to delete role "{deleteModal.data?.role_name}"?</p>
                 <p>This action cannot be undone.</p>
             </Modal>
-        </div>
+        </ModuleLayout>
     );
 };
 

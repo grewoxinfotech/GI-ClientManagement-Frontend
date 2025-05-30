@@ -2,31 +2,29 @@ import React from 'react';
 import * as Yup from 'yup';
 import AdvancedForm from '../../../../components/AdvancedForm';
 
-// Define validation schema using Yup
-const validationSchema = Yup.object().shape({
-    username: Yup.string()
-        .required('Username is required')
-        .min(3, 'Username must be at least 3 characters'),
-    email: Yup.string()
-        .required('Email is required')
-        .email('Please enter a valid email'),
-    password: Yup.string()
-        .when('$isEditing', {
-            is: false,
-            then: schema => schema.required('Password is required').min(6, 'Password must be at least 6 characters'),
-            otherwise: schema => schema.min(6, 'Password must be at least 6 characters')
-        }),
-    role_id: Yup.string().required('Role is required'),
-    first_name: Yup.string(),
-    last_name: Yup.string(),
-    phone: Yup.string(),
-    address: Yup.string(),
-    city: Yup.string(),
-    state: Yup.string(),
-    country: Yup.string(),
-    zip_code: Yup.string(),
-    is_active: Yup.boolean()
-});
+const getValidationSchema = (isEditing) => {
+    return Yup.object().shape({
+        username: Yup.string()
+            .required('Username is required')
+            .min(3, 'Username must be at least 3 characters'),
+        email: Yup.string()
+            .required('Email is required')
+            .email('Please enter a valid email'),
+        password: isEditing
+            ? Yup.string().min(6, 'Password must be at least 6 characters')
+            : Yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
+        role_id: Yup.string().required('Role is required'),
+        first_name: Yup.string(),
+        last_name: Yup.string(),
+        phone: Yup.string(),
+        address: Yup.string(),
+        city: Yup.string(),
+        state: Yup.string(),
+        country: Yup.string(),
+        zip_code: Yup.string(),
+        is_active: Yup.boolean()
+    });
+};
 
 const UserForm = ({ initialValues, roles, isLoadingRoles, isSubmitting, onSubmit, onCancel }) => {
     const isEditing = !!initialValues;
@@ -175,7 +173,7 @@ const UserForm = ({ initialValues, roles, isLoadingRoles, isSubmitting, onSubmit
             onSubmit={handleSubmit}
             onCancel={onCancel}
             fields={getUserFields()}
-            validationSchema={validationSchema.validate({ $isEditing: isEditing })}
+            validationSchema={getValidationSchema(isEditing)}
             submitButtonText={isEditing ? 'Update User' : 'Create User'}
         />
     );

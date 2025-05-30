@@ -348,7 +348,7 @@
     font-weight: 600;
     margin-bottom: 24px;
     background: $gradient-primary;
-    -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 

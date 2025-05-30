@@ -1,8 +1,7 @@
 import React from 'react';
-import { Card } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MdOutlineEmail, MdAccessTime } from 'react-icons/md';
 import { FaUserTag } from 'react-icons/fa';
+import ModuleCard from '../../../../components/ModuleCard';
 
 const UserCard = ({ user, roleName, onEdit, onView, onDelete }) => {
     const formatDate = (timestamp) => {
@@ -13,46 +12,39 @@ const UserCard = ({ user, roleName, onEdit, onView, onDelete }) => {
         return date.toLocaleDateString('en-US', options);
     };
 
+    const infoItems = [
+        {
+            icon: <MdOutlineEmail />,
+            content: user.email
+        },
+        {
+            icon: <FaUserTag />,
+            content: roleName || 'N/A',
+            badge: true
+        }
+    ];
+
+    const metaItems = [
+        {
+            icon: <MdAccessTime />,
+            content: `Created ${formatDate(user.createdAt)}`
+        },
+        {
+            icon: <MdAccessTime />,
+            content: `Updated ${formatDate(user.updatedAt || user.createdAt)}`
+        }
+    ];
+
     return (
-        <Card className="user-card" bordered={false}>
-            <div className="user-card-header">
-                <h3 className="user-card-title">{user.username}</h3>
-            </div>
-
-            <div className="user-card-content">
-                <div className="user-card-info">
-                    <MdOutlineEmail />
-                    <span>{user.email}</span>
-                </div>
-                <div className="user-card-info">
-                    <FaUserTag />
-                    <span>{roleName || 'N/A'}</span>
-                </div>
-            </div>
-
-            <div className="user-card-meta">
-                <div>
-                    <MdAccessTime />
-                    Created {formatDate(user.createdAt)}
-                </div>
-                <div>
-                    <MdAccessTime />
-                    Updated {formatDate(user.updatedAt || user.createdAt)}
-                </div>
-            </div>
-
-            <div className="user-card-actions">
-                <button className="btn btn-primary btn-view" onClick={() => onView(user)}>
-                    <EyeOutlined /> View Details
-                </button>
-                <button className="btn btn-icon btn-ghost" onClick={() => onEdit(user)}>
-                    <EditOutlined />
-                </button>
-                <button className="btn btn-icon btn-ghost delete" onClick={() => onDelete(user)}>
-                    <DeleteOutlined />
-                </button>
-            </div>
-        </Card>
+        <ModuleCard
+            title={user.username}
+            infoItems={infoItems}
+            metaItems={metaItems}
+            onView={onView}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            item={user}
+        />
     );
 };
 

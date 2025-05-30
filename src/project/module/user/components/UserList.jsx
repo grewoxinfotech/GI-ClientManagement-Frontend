@@ -1,194 +1,101 @@
-import React, { useState } from 'react';
-import { Table, Dropdown, Input, Button, Space, Empty } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined, MoreOutlined, SearchOutlined } from '@ant-design/icons';
+import React from 'react';
+import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import UserCard from './UserCard.jsx';
+import CommonTable from '../../../../components/CommonTable';
+import ModuleGrid from '../../../../components/ModuleGrid';
+import { generateColumns, generateActionItems } from '../../../../utils/tableUtils.jsx';
 
 const UserList = ({ users, roleMap, isLoading, viewMode, pagination, onEdit, onView, onDelete }) => {
-    const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
-
-    const formatDate = (timestamp) => {
-        if (!timestamp) return 'N/A';
-
-        const date = new Date(timestamp);
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        return date.toLocaleDateString('en-US', options);
-    };
-
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-
-    const handleReset = (clearFilters, confirm) => {
-        clearFilters();
-        setSearchText('');
-        confirm();
-    };
-
-    const getColumnSearchProps = (dataIndex) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div style={{ padding: 8 }}>
-                <Input
-                    placeholder={`Search ${dataIndex}`}
-                    value={selectedKeys[0]}
-                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    style={{ marginBottom: 8, display: 'block' }}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined />}
-                        className="btn btn-filter btn-primary"
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        onClick={() => handleReset(clearFilters, confirm)}
-                        className="btn btn-filter btn-reset"
-                    >
-                        Reset
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: filtered => (
-            <SearchOutlined style={{ color: filtered ? 'var(--primary-color)' : undefined }} />
-        ),
-        onFilter: (value, record) =>
-            record[dataIndex]
-                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                : '',
-        filteredValue: searchedColumn === dataIndex ? [searchText] : null
-    });
-
-    const getActionItems = (record) => [
+    const fields = [
         {
-            key: 'view',
-            icon: <EyeOutlined />,
-            label: 'View',
-            onClick: () => onView?.(record)
-        },
-        {
-            key: 'edit',
-            icon: <EditOutlined />,
-            label: 'Edit',
-            onClick: () => onEdit?.(record)
-        },
-        {
-            key: 'delete',
-            icon: <DeleteOutlined />,
-            label: 'Delete',
-            onClick: () => onDelete?.(record),
-            danger: true
-        }
-    ];
-
-    const columns = [
-        {
+            name: 'username',
             title: 'Username',
-            dataIndex: 'username',
-            key: 'username',
-            sorter: (a, b) => a.username.localeCompare(b.username),
-            ...getColumnSearchProps('username')
+            sorter: (a, b) => a.username.localeCompare(b.username)
         },
         {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-            ...getColumnSearchProps('email')
+            name: 'email',
+            title: 'Email'
         },
         {
+            name: 'role_id',
             title: 'Role',
-            dataIndex: 'role_id',
-            key: 'role',
-            render: (roleId) => roleMap[roleId] || 'N/A',
-            ...getColumnSearchProps('role_id')
+            render: (roleId) => roleMap[roleId] || 'N/A'
         },
         {
+            name: 'createdAt',
             title: 'Created At',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-            render: (date) => formatDate(date),
             sorter: (a, b) => new Date(a.createdAt) - new Date(b.createdAt)
         },
         {
+            name: 'updatedAt',
             title: 'Updated At',
-            dataIndex: 'updatedAt',
-            key: 'updatedAt',
-            render: (date, record) => formatDate(date || record.createdAt),
             sorter: (a, b) => new Date(a.updatedAt || a.createdAt) - new Date(b.updatedAt || b.createdAt)
+        }
+    ];
+    const actions = [
+        {
+            key: 'view',
+            label: 'View',
+            icon: <EyeOutlined />,
+            handler: onView
         },
         {
-            title: 'Actions',
-            key: 'actions',
-            width: 80,
-            render: (_, record) => (
-                <Dropdown
-                    menu={{ items: getActionItems(record) }}
-                    trigger={['click']}
-                    placement="bottomRight"
-                >
-                    <button className="btn btn-icon btn-ghost">
-                        <MoreOutlined />
-                    </button>
-                </Dropdown>
-            )
+            key: 'edit',
+            label: 'Edit',
+            icon: <EditOutlined />,
+            handler: onEdit
+        },
+        {
+            key: 'delete',
+            label: 'Delete',
+            icon: <DeleteOutlined />,
+            danger: true,
+            handler: onDelete
         }
     ];
 
+    const columns = generateColumns(fields, {
+        dateFields: ['createdAt', 'updatedAt']
+    });
+
+    const getActionItems = generateActionItems(actions);
+
+    const renderUserCard = (user) => (
+        <UserCard
+            key={user.id}
+            user={user}
+            roleName={roleMap[user.role_id]}
+            onEdit={onEdit}
+            onView={onView}
+            onDelete={onDelete}
+        />
+    );
+
     if (viewMode === 'grid') {
         return (
-            <div className="user-grid">
-                {users.length === 0 && !isLoading ? (
-                    <Empty
-                        className="empty-state"
-                        image={Empty.PRESENTED_IMAGE_SIMPLE}
-                        description="No users found"
-                    />
-                ) : (
-                    users.map(user => (
-                        <UserCard
-                            key={user.id}
-                            user={user}
-                            roleName={roleMap[user.role_id]}
-                            onEdit={onEdit}
-                            onView={onView}
-                            onDelete={onDelete}
-                        />
-                    ))
-                )}
-            </div>
+            <ModuleGrid
+                items={users}
+                renderItem={renderUserCard}
+                isLoading={isLoading}
+                emptyMessage="No users found"
+            />
         );
     }
 
     return (
-        <div className="user-list">
-            <Table
+        <div className="table-list">
+            <CommonTable
+                data={users}
                 columns={columns}
-                dataSource={users}
-                rowKey="id"
-                loading={isLoading}
-                onChange={(newPagination) => pagination.onChange(newPagination.current, newPagination.pageSize)}
-                pagination={{
-                    current: pagination.current,
-                    pageSize: pagination.pageSize,
-                    total: pagination.total,
-                    showSizeChanger: true,
-                    showTotal: (total) => `Total ${total} users`,
-                    showQuickJumper: true
+                isLoading={isLoading}
+                pagination={pagination}
+                actionItems={getActionItems}
+                extraProps={{
+                    itemName: 'users',
+                    onChange: (newPagination) => pagination.onChange(newPagination.current, newPagination.pageSize)
                 }}
-                locale={{
-                    emptyText: (
-                        <Empty
-                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            description="No users found"
-                        />
-                    )
-                }}
+                searchableColumns={['username', 'email', 'role_id']}
+                dateColumns={['createdAt', 'updatedAt']}
             />
         </div>
     );

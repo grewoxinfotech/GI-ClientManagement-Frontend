@@ -23,8 +23,14 @@ const LeadForm = ({ initialValues, isSubmitting, onSubmit, onCancel, pipelines =
     const filters = filtersResponse?.data?.items || [];
     const sources = filters.filter(filter => filter.type === 'source');
     const categories = filters.filter(filter => filter.type === 'category');
-    const priorities = filters.filter(filter => filter.type === 'tag');
     const statuses = filters.filter(filter => filter.type === 'status');
+
+    // Fixed priority options instead of dynamic
+    const priorityOptions = [
+        { label: 'Low', value: 'low' },
+        { label: 'Medium', value: 'medium' },
+        { label: 'High', value: 'high' }
+    ];
 
     const { data: contactsResponse } = useGetContactsQuery({ limit: 'all' });
     const contacts = contactsResponse?.data?.items || [];
@@ -117,7 +123,7 @@ const LeadForm = ({ initialValues, isSubmitting, onSubmit, onCancel, pipelines =
                     label: 'Priority',
                     type: 'select',
                     placeholder: 'Select Priority',
-                    options: priorities.map(p => ({ label: p.name, value: p.id })),
+                    options: priorityOptions,
                     showSearch: true,
                     optionFilterProp: 'children',
                     allowClear: true,

@@ -1,83 +1,16 @@
 @use '../../../../../styles/variables' as *;
 
+
 .stage {
     height: 100%;
-    display: flex;
-    flex-direction: column;
     background: transparent;
     border: 1px solid $border-color;
     border-radius: $border-radius;
     box-shadow: 0 4px 20px $shadow-color;
-
-    &-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        padding: 16px 24px;
-
-
-
-        &-actions {
-            display: flex;
-            align-items: center;
-
-            .pipeline-filter {
-                display: flex;
-                align-items: center;
-
-                .ant-select {
-                    .ant-select-selector {
-                        border-radius: 6px;
-                        height: 40px;
-                        display: flex;
-                        align-items: center;
-                        border-color: $border-color;
-                    }
-
-                    .ant-select-arrow {
-                        color: $text-secondary;
-                    }
-                }
-            }
-        }
-    }
-
-    &-content {
-        flex: 1;
-        padding: 24px;
-        overflow: auto;
-    }
-
-    &-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 24px;
-        padding: 4px;
-    }
 }
 
-// Container for grid view with pagination
-.stage-container {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-}
 
-// Grid pagination styles
-.grid-pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid $border-color;
 
-    .ant-pagination {
-        margin-top: 0;
-    }
-}
-
-// Type styling for all views
 .type-label {
     display: inline-flex;
     align-items: center;
@@ -87,7 +20,6 @@
     color: $text-primary;
 }
 
-// Default YES styling for all views
 .default-yes {
     display: inline-block;
     font-size: 12px;
@@ -95,7 +27,6 @@
     color: $text-success;
 }
 
-// No styling for all views
 .default-no {
     display: inline-block;
     font-size: 12px;
@@ -103,7 +34,6 @@
     color: $text-secondary;
 }
 
-// Pipeline ID styling for all views
 .pipeline-id,
 .pipeline-name {
     font-size: 12px;
@@ -198,7 +128,6 @@
         }
     }
 
-    // Card specific styles for elements
     .type-label,
     .default-yes,
     .default-no,
@@ -208,93 +137,4 @@
         text-align: right;
         justify-content: flex-end;
     }
-}
-
-
-.text-error {
-    color: $text-error !important;
-}
-
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 0;
-    color: $text-secondary;
-
-    .empty-icon {
-        font-size: 48px;
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
-
-    .empty-text {
-        font-size: 16px;
-    }
-}
-
-// Responsive
-@media (max-width: 768px) {
-    .stage {
-        padding: 16px;
-
-        &-header {
-            flex-direction: column;
-            align-items: flex-start;
-
-
-
-            &-actions {
-                width: 100%;
-                justify-content: space-between;
-            }
-        }
-
-        &-content {
-            padding: 16px;
-        }
-    }
-}
-
-// Add a style for stage name
-.stage-name {
-    font-weight: 500;
-    color: $text-primary;
-}
-
-// Stage table styles
-.stage-table {
-    .ant-table {
-        background: transparent;
-
-        &-thead>tr>th {
-            background: $bg-secondary !important;
-            color: $text-primary !important;
-            border-bottom: 1px solid $border-color;
-            padding: 12px 16px;
-            font-weight: 600;
-        }
-
-        &-tbody>tr {
-            &:hover {
-                td {
-                    background: rgba($primary-color, 0.02) !important;
-                }
-            }
-
-            >td {
-                border-bottom: 1px solid $border-color;
-                background: transparent;
-                padding: 12px 16px;
-                color: $text-primary;
-
-                &.action-column {
-                    padding: 12px !important;
-                    text-align: center;
-                }
-            }
-        }
-    }
-
 }

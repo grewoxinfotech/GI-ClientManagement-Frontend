@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Modal, Space, message } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { RiLayoutGridLine, RiListUnordered, RiUserLine } from 'react-icons/ri';
+import { Modal, Space, message } from 'antd';
+import { DeleteOutlined } from '@ant-design/icons';
+import { RiUserLine } from 'react-icons/ri';
 import UserList from './components/UserList';
 import UserForm from './components/UserForm';
 import UserView from './components/UserView';
 import { ModalTitle } from '../../../components/AdvancedForm';
+import ModuleLayout from '../../../components/ModuleLayout';
 import {
     useDeleteUserMutation,
     useGetUsersQuery,
@@ -15,8 +16,6 @@ import {
     useUpdateUserMutation
 } from '../../../config/api/apiServices';
 import './user.scss';
-
-const { Title } = Typography;
 
 const User = () => {
     const [viewMode, setViewMode] = useState('list');
@@ -76,6 +75,10 @@ const User = () => {
         });
     };
 
+    const handleViewModeChange = (mode) => {
+        setViewMode(mode);
+    };
+
     const handleFormSubmit = async (values) => {
         try {
             if (formModal.data) {
@@ -124,32 +127,14 @@ const User = () => {
     };
 
     return (
-        <div className="user">
-            <div className="user-header">
-                <Title level={2} className="mfh_title">Users</Title>
-                <div className="user-header-actions">
-                    <Space size={8}>
-                        <div className="view-toggle" data-mode={viewMode}>
-                            <button
-                                className={`btn btn-icon ${viewMode === 'list' ? 'btn-primary' : 'btn-ghost'}`}
-                                onClick={() => setViewMode('list')}
-                            >
-                                <RiListUnordered />
-                            </button>
-                            <button
-                                className={`btn btn-icon ${viewMode === 'grid' ? 'btn-primary' : 'btn-ghost'}`}
-                                onClick={() => setViewMode('grid')}
-                            >
-                                <RiLayoutGridLine />
-                            </button>
-                        </div>
-                        <button className="btn btn-primary btn-lg" onClick={handleAdd}>
-                            <PlusOutlined /> Add User
-                        </button>
-                    </Space>
-                </div>
-            </div>
-
+        <ModuleLayout
+            title="Users"
+            showViewToggle={true}
+            viewMode={viewMode}
+            onViewModeChange={handleViewModeChange}
+            onAddClick={handleAdd}
+            className="user"
+        >
             <UserList
                 users={users}
                 roleMap={roleMap}
@@ -211,7 +196,7 @@ const User = () => {
                 <p>Are you sure you want to delete user "{deleteModal.data?.username}"?</p>
                 <p>This action cannot be undone.</p>
             </Modal>
-        </div>
+        </ModuleLayout>
     );
 };
 

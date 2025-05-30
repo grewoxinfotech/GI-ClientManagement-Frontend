@@ -2,26 +2,10 @@
 
 .pipeline {
     height: 100%;
-    display: flex;
-    flex-direction: column;
     background: transparent;
     border: 1px solid $border-color;
     border-radius: $border-radius;
     box-shadow: 0 4px 20px $shadow-color;
-
-    &-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        padding: 16px 24px;
-    }
-
-    &-content {
-        flex: 1;
-        padding: 24px;
-        overflow: auto;
-    }
 
     &-grid {
         display: grid;
@@ -144,154 +128,8 @@
             }
         }
     }
-
-    .pipeline-table {
-        .ant-table {
-            background: transparent;
-
-            &-thead>tr>th {
-                background: $bg-secondary !important;
-                color: $text-primary !important;
-                border-bottom: 1px solid $border-color;
-                padding: 12px 16px;
-                font-weight: 600;
-            }
-
-            &-tbody>tr {
-                &:hover {
-                    td {
-                        background: rgba($primary-color, 0.02) !important;
-                    }
-                }
-
-                >td {
-                    border-bottom: 1px solid $border-color;
-                    background: transparent;
-                    padding: 12px 16px;
-                    color: $text-primary;
-
-                    &.action-column {
-                        padding: 12px !important;
-                        text-align: center;
-                    }
-                }
-            }
-        }
-
-        .pipeline-name {
-            font-weight: 500;
-            color: $text-primary;
-        }
-
-        .btn-icon {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            color: $text-secondary;
-            transition: all 0.3s ease;
-            border: 1px solid $border-color;
-
-            &:hover {
-                color: $primary-color;
-                border-color: $primary-color;
-                background: rgba($primary-color, 0.05);
-            }
-
-            &.delete:hover {
-                color: $text-error;
-                border-color: $text-error;
-                background: rgba($text-error, 0.05);
-            }
-        }
-    }
 }
 
-// Dropdown styles
-.pipeline-actions-dropdown {
-    .ant-dropdown-menu {
-        padding: 4px;
-        border-radius: 8px;
-        border: 1px solid $border-color;
-        background: $bg-primary;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-
-        &-item {
-            padding: 8px 12px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: $text-primary;
-            transition: all 0.3s ease;
-
-            &:hover {
-                background: rgba($primary-color, 0.05);
-            }
-
-            &-danger {
-                color: $text-error !important;
-
-                &:hover {
-                    background: rgba($text-error, 0.05) !important;
-                    color: $text-error !important;
-                }
-            }
-        }
-
-        .ant-dropdown-menu-item-divider {
-            background-color: $border-color;
-            margin: 4px 0;
-        }
-    }
-}
-
-.text-error {
-    color: $text-error !important;
-}
-
-// Empty State Styles
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 24px;
-    background: var(--bg-primary);
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    margin: 24px;
-    min-height: 300px;
-
-    .empty-icon {
-        font-size: 48px;
-        color: var(--text-secondary);
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
-
-    .empty-text {
-        font-size: 16px;
-        color: var(--text-secondary);
-        text-align: center;
-        margin: 0;
-    }
-}
-
-// Grid pagination styles
-.grid-pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid $border-color;
-
-    .ant-pagination {
-        margin-top: 0;
-    }
-}
 
 
 // Pipeline view styles
@@ -396,6 +234,7 @@
         margin-bottom: 20px;
 
         .divider-text {
+            color: $text-primary;
             background-color: $bg-dark;
             padding: 0 15px;
             font-weight: 600;
@@ -484,30 +323,5 @@
                 background: $gradient-row;
             }
         }
-    }
-}
-
-// Pipeline name with count
-.pipeline-name {
-    .pipeline-count {
-        font-size: 12px;
-        color: $text-secondary;
-        margin-left: 4px;
-    }
-}
-
-.empty-stages-message {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 30px;
-    background: $bg-dark;
-    border-radius: $border-radius;
-    border: 1px dashed $border-color;
-    margin-top: 20px;
-
-    .ant-typography {
-        color: $text-secondary;
-        font-size: 16px;
     }
 }

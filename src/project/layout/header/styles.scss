@@ -16,7 +16,7 @@
         width: 40px;
         height: 40px;
         @include flex-center;
-        color: var(--text-primary);
+        color: var(--text-primary) !important;
         transition: all 0.3s ease;
 
         &:hover {
@@ -26,6 +26,11 @@
 
         .toggle-icon {
             font-size: 20px;
+
+            &:hover {
+                background: $gradient-row;
+                color: var(--primary-color);
+            }
         }
     }
 

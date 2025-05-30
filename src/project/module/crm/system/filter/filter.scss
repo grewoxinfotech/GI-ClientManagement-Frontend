@@ -1,16 +1,6 @@
 @use '../../../../../styles/variables' as *;
+@use "sass:map";
 
-.grid-pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid $border-color;
-
-    .ant-pagination {
-        margin-top: 0;
-    }
-}
 
 .filter {
     height: 100%;
@@ -20,51 +10,6 @@
     border: 1px solid $border-color;
     border-radius: $border-radius;
     box-shadow: 0 4px 20px $shadow-color;
-
-    &-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 16px;
-        padding: 16px 24px;
-
-        .type-filter {
-            .ant-select {
-                min-width: 180px;
-                border-radius: $border-radius;
-
-                .ant-select-selector {
-                    border-radius: 8px;
-                    height: 40px;
-                    display: flex;
-                    align-items: center;
-                    border: 1px solid $border-color;
-                    transition: all 0.3s ease;
-                    background-color: $bg-light;
-
-                    &:hover {
-                        border-color: $primary-color;
-                    }
-                }
-
-                .ant-select-selection-item {
-                    font-weight: 500;
-                    color: $text-primary;
-                }
-
-                .ant-select-arrow {
-                    color: $text-secondary;
-                }
-
-                &.ant-select-focused {
-                    .ant-select-selector {
-                        border-color: $primary-color;
-                        box-shadow: 0 0 0 2px rgba($primary-color, 0.1);
-                    }
-                }
-            }
-        }
-    }
 
     &-content {
         flex: 1;
@@ -193,100 +138,9 @@
             }
         }
     }
-
-    .filter-table {
-        .ant-table {
-            background: transparent;
-
-            &-thead>tr>th {
-                background: $bg-secondary !important;
-                color: $text-primary !important;
-                border-bottom: 1px solid $border-color;
-                padding: 12px 16px;
-                font-weight: 600;
-            }
-
-            &-tbody>tr {
-                &:hover {
-                    td {
-                        background: rgba($primary-color, 0.02) !important;
-                    }
-                }
-
-                >td {
-                    border-bottom: 1px solid $border-color;
-                    background: transparent;
-                    padding: 12px 16px;
-                    color: $text-primary;
-
-                    &.action-column {
-                        padding: 12px !important;
-                        text-align: center;
-                    }
-                }
-            }
-        }
-
-        .filter-name {
-            font-weight: 500;
-            color: $text-primary;
-        }
-
-        .btn-icon {
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            color: $text-secondary;
-            transition: all 0.3s ease;
-            border: 1px solid $border-color;
-
-            &:hover {
-                color: $primary-color;
-                border-color: $primary-color;
-                background: rgba($primary-color, 0.05);
-            }
-
-            &.delete:hover {
-                color: $text-error;
-                border-color: $text-error;
-                background: rgba($text-error, 0.05);
-            }
-        }
-    }
 }
 
 
-
-// Empty State Styles
-.empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 48px 24px;
-    background: var(--bg-primary);
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    margin: 24px;
-    min-height: 300px;
-
-    .empty-icon {
-        font-size: 48px;
-        color: var(--text-secondary);
-        margin-bottom: 16px;
-        opacity: 0.5;
-    }
-
-    .empty-text {
-        font-size: 16px;
-        color: var(--text-secondary);
-        text-align: center;
-        margin: 0;
-    }
-}
 
 // Filter name with count
 .filter-name {
@@ -328,69 +182,20 @@
     height: 24px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
-    &.tag {
-        background: $gradient-tag;
-        color: map-get(map-get($filter-type-colors, 'tag'), 'text-light');
+    @each $type, $gradient in (tag: $gradient-tag,
+        status: $gradient-status,
+        label: $gradient-label,
+        source: $gradient-source,
+        category: $gradient-category,
+        general: $gradient-general ) {
+        &.#{$type} {
+            background: $gradient;
+            color: map.get(map.get($filter-type-colors, $type), 'text-light');
 
-        .dark-mode & {
-            background: $gradient-tag;
-            color: map-get(map-get($filter-type-colors, 'tag'), 'text-dark');
+            .dark-mode & {
+                background: $gradient;
+                color: map.get(map.get($filter-type-colors, $type), 'text-dark');
+            }
         }
     }
-
-    &.status {
-        background: $gradient-status;
-        color: map-get(map-get($filter-type-colors, 'status'), 'text-light');
-
-        .dark-mode & {
-            background: $gradient-status;
-            color: map-get(map-get($filter-type-colors, 'status'), 'text-dark');
-        }
-    }
-
-    &.label {
-        background: $gradient-label;
-        color: map-get(map-get($filter-type-colors, 'label'), 'text-light');
-
-        .dark-mode & {
-            background: $gradient-label;
-            color: map-get(map-get($filter-type-colors, 'label'), 'text-dark');
-        }
-    }
-
-    &.source {
-        background: $gradient-source;
-        color: map-get(map-get($filter-type-colors, 'source'), 'text-light');
-
-        .dark-mode & {
-            background: $gradient-source;
-            color: map-get(map-get($filter-type-colors, 'source'), 'text-dark');
-        }
-    }
-
-    &.category {
-        background: $gradient-category;
-        color: map-get(map-get($filter-type-colors, 'category'), 'text-light');
-
-        .dark-mode & {
-            background: $gradient-category;
-            color: map-get(map-get($filter-type-colors, 'category'), 'text-dark');
-        }
-    }
-
-    &.general {
-        background: $gradient-general;
-        color: map-get(map-get($filter-type-colors, 'general'), 'text-light');
-
-        .dark-mode & {
-            background: $gradient-general;
-            color: map-get(map-get($filter-type-colors, 'general'), 'text-dark');
-        }
-    }
-}
-
-// Placeholder option style
-.placeholder-option {
-    color: #bfbfbf !important;
-    font-style: italic;
 }

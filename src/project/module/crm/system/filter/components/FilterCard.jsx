@@ -3,7 +3,7 @@ import { EditOutlined, DeleteOutlined, MoreOutlined } from '@ant-design/icons';
 import { Dropdown } from 'antd';
 
 const FilterCard = ({ filter, onEdit, onDelete }) => {
-    // Check if filter is created by SYSTEM
+
     const isSystemCreated = filter.created_by === 'SYSTEM';
 
     const getActionMenu = (filter) => {

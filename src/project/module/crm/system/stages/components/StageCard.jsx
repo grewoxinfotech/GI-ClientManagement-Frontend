@@ -4,14 +4,11 @@ import { Dropdown } from 'antd';
 import { useGetPipelinesQuery } from '../../../../../../config/api/apiServices';
 
 const StageCard = ({ stage, onEdit, onDelete }) => {
-    // Fetch pipelines data to show pipeline names
     const { data: pipelinesResponse } = useGetPipelinesQuery({ limit: 100 });
     const pipelines = pipelinesResponse?.data?.items || [];
 
-    // Check if stage is created by SYSTEM
     const isSystemCreated = stage.created_by === 'SYSTEM';
 
-    // Get pipeline name by ID
     const getPipelineName = (pipelineId) => {
         const pipeline = pipelines.find(p => p.id === pipelineId);
         return pipeline ? pipeline.name : pipelineId;
@@ -27,7 +24,6 @@ const StageCard = ({ stage, onEdit, onDelete }) => {
             }
         ];
 
-        // Only add delete option if not created by SYSTEM
         if (!isSystemCreated) {
             menuItems.push(
                 {

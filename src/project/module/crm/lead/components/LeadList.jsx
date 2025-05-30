@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Table, Card, Row, Col, Empty, Spin, Button, Tag, Space, Pagination, Dropdown, Input, Switch } from 'antd';
-import { EditOutlined, DeleteOutlined, MoreOutlined, SearchOutlined } from '@ant-design/icons';
-import { RiFileList3Line } from 'react-icons/ri';
+import React from 'react';
+import { Switch } from 'antd';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { useUpdateLeadMutation, useGetFiltersQuery } from '../../../../../config/api/apiServices';
+import CommonTable from '../../../../../components/CommonTable';
+import { generateColumns, generateActionItems } from '../../../../../utils/tableUtils.jsx';
+import FancyLoader from '../../../../../components/FancyLoader';
 
 const LeadList = ({
     leads = [],
@@ -17,8 +19,6 @@ const LeadList = ({
     pipelines = [],
     stages = []
 }) => {
-    const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
     const [updateLead] = useUpdateLeadMutation();
 
     const { data: filtersResponse } = useGetFiltersQuery({ limit: 'all' });
@@ -83,91 +83,18 @@ const LeadList = ({
         }
     };
 
-    const handleSearch = (selectedKeys, confirm, dataIndex) => {
-        confirm();
-        setSearchText(selectedKeys[0]);
-        setSearchedColumn(dataIndex);
-    };
-
-    const handleReset = (clearFilters, confirm) => {
-        clearFilters();
-        setSearchText('');
-        confirm();
-    };
-
-    const getColumnSearchProps = (dataIndex) => ({
-        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }) => (
-            <div style={{ padding: 8 }}>
-                <Input
-                    placeholder={`Search ${dataIndex}`}
-                    value={selectedKeys[0]}
-                    onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-                    onPressEnter={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                    style={{ marginBottom: 8, display: 'block' }}
-                />
-                <Space>
-                    <Button
-                        type="primary"
-                        onClick={() => handleSearch(selectedKeys, confirm, dataIndex)}
-                        icon={<SearchOutlined />}
-                        className="btn btn-filter btn-primary"
-                    >
-                        Search
-                    </Button>
-                    <Button
-                        onClick={() => handleReset(clearFilters, confirm)}
-                        className="btn btn-filter btn-reset"
-                    >
-                        Reset
-                    </Button>
-                </Space>
-            </div>
-        ),
-        filterIcon: filtered => (
-            <SearchOutlined style={{ color: filtered ? 'var(--primary-color)' : undefined }} />
-        ),
-        onFilter: (value, record) =>
-            record[dataIndex]
-                ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                : '',
-        filteredValue: searchedColumn === dataIndex ? [searchText] : null
-    });
-
-    const getActionItems = (record) => [
+    const fields = [
         {
-            key: 'edit',
-            icon: <EditOutlined />,
-            label: 'Edit',
-            onClick: () => onEdit(record)
-        },
-        {
-            key: 'delete',
-            icon: <DeleteOutlined />,
-            label: 'Delete',
-            onClick: () => onDelete(record),
-            danger: true
-        }
-    ];
-
-    if (isLoading && leads.length === 0) {
-        return <div className="center-spinner"><Spin size="large" /></div>;
-    }
-
-    const columns = [
-        {
+            name: 'leadTitle',
             title: 'Title',
-            dataIndex: 'leadTitle',
-            key: 'leadTitle',
             render: (title) => (
                 <div style={{ fontWeight: 'bold' }}>{title}</div>
             ),
-            sorter: (a, b) => a.leadTitle.localeCompare(b.leadTitle),
-            ...getColumnSearchProps('leadTitle')
+            sorter: (a, b) => a.leadTitle.localeCompare(b.leadTitle)
         },
         {
+            name: 'leadValue',
             title: 'Value',
-            dataIndex: 'leadValue',
-            key: 'leadValue',
             render: (value) => (
                 <div className="value-display">
                     <span className="currency-symbol">₹</span>
@@ -177,21 +104,18 @@ const LeadList = ({
             sorter: (a, b) => a.leadValue - b.leadValue
         },
         {
+            name: 'pipeline',
             title: 'Pipeline / Stage',
-            dataIndex: 'pipeline',
-            key: 'pipeline',
-            render: (_, record) => renderPipelineStageInfo(record),
+            render: (_, record) => renderPipelineStageInfo(record)
         },
         {
+            name: 'source',
             title: 'Source',
-            dataIndex: 'source',
-            key: 'source',
-            render: (sourceId) => sourceId ? <span>{getSourceName(sourceId)}</span> : null,
+            render: (sourceId) => sourceId ? <span>{getSourceName(sourceId)}</span> : null
         },
         {
+            name: 'status',
             title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
             render: (status, record) => (
                 <Switch
                     checked={status === 'open'}
@@ -199,60 +123,73 @@ const LeadList = ({
                     checkedChildren="Open"
                     unCheckedChildren="Closed"
                 />
-            ),
-            ...getColumnSearchProps('status')
-        },
-        {
-            title: 'Priority',
-            dataIndex: 'priority',
-            key: 'priority',
-            render: (priority) => priority ? <span style={{ fontWeight: 'bold', color: getPriorityColor(priority) }}>{priority}</span> : null,
-            ...getColumnSearchProps('priority')
-        },
-        {
-            title: 'Actions',
-            key: 'actions',
-            width: 80,
-            render: (_, record) => (
-                <Dropdown
-                    menu={{ items: getActionItems(record) }}
-                    trigger={['click']}
-                    placement="bottomRight"
-                >
-                    <button className="btn btn-icon btn-ghost">
-                        <MoreOutlined />
-                    </button>
-                </Dropdown>
             )
+        },
+        {
+            name: 'priority',
+            title: 'Priority',
+            render: (priority) => priority ?
+                <span style={{ fontWeight: 'bold', color: getPriorityColor(priority) }}>{priority}</span>
+                : null
         }
     ];
 
+    const actions = [
+        {
+            key: 'edit',
+            label: 'Edit',
+            icon: <EditOutlined />,
+            handler: onEdit
+        },
+        {
+            key: 'delete',
+            label: 'Delete',
+            icon: <DeleteOutlined />,
+            danger: true,
+            handler: onDelete
+        }
+    ];
+
+    const columns = generateColumns(fields);
+    const getActionItems = generateActionItems(actions);
+
+    if (isLoading && leads.length === 0) {
+        return (
+            <FancyLoader
+                message="Loading your leads..."
+                subMessage="Please wait while we prepare your data"
+                subMessage2="This may take a few moments"
+                processingText="PROCESSING"
+            />
+        );
+    }
+
+    // Kanban view is handled separately
+    if (viewMode === 'grid') {
+        return null;
+    }
+
     return (
-        <div className="lead-list-container">
-            <Table
+        <div className="table-list">
+            <CommonTable
+                data={leads}
                 columns={columns}
-                dataSource={leads}
-                rowKey="id"
-                loading={isLoading}
-                onChange={(pagination) => onPageChange(pagination.current, pagination.pageSize)}
+                isLoading={isLoading}
                 pagination={{
                     current: currentPage,
                     pageSize: pageSize,
                     total: total,
+                    onChange: onPageChange,
                     showSizeChanger: true,
                     showTotal: (total) => `Total ${total} leads`,
                     showQuickJumper: true
                 }}
-                className="lead-table"
-                locale={{
-                    emptyText: (
-                        <Empty
-                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            description="No leads in this stage"
-                            className="kanban-empty"
-                        />
-                    )
+                actionItems={getActionItems}
+                extraProps={{
+                    itemName: 'leads',
+                    className: 'lead-table'
                 }}
+                searchableColumns={['leadTitle', 'status', 'priority']}
             />
         </div>
     );

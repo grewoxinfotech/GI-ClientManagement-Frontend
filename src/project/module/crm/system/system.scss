@@ -99,3 +99,38 @@
 .system-content {
     flex: 1;
 }
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 16px;
+    color: $text-secondary;
+}
+
+.grid-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid $border-color;
+
+    .ant-pagination {
+        margin-top: 0;
+    }
+}
+
+.module-grid-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .module-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        padding: 4px;
+    }
+}
