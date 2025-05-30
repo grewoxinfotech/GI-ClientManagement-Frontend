@@ -1,0 +1,513 @@
+@use '../../../../../styles/variables' as *;
+
+.pipeline {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 20px $shadow-color;
+
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 24px;
+    }
+
+    &-content {
+        flex: 1;
+        padding: 24px;
+        overflow: auto;
+    }
+
+    &-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        padding: 4px;
+    }
+
+    &-card {
+        background: $bg-primary;
+        border: 1px solid $border-color;
+        border-radius: $border-radius;
+        padding: 20px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+
+        &::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: $gradient-primary;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        &:hover {
+            border-color: $primary-color;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba($primary-color, 0.1);
+
+            &::before {
+                opacity: 0.02;
+            }
+
+            .pipeline-card-title {
+                color: $primary-color;
+            }
+        }
+
+        &-header {
+            margin-bottom: 16px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        &-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: $primary-color;
+            margin: 0;
+            transition: color 0.3s ease;
+        }
+
+        &-content {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        &-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 12px;
+            background: $bg-light;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: $gradient-row;
+            }
+
+            .stat-value {
+                font-size: 15px;
+                font-weight: 600;
+                color: $primary-color;
+            }
+
+            .stat-label {
+                font-size: 13px;
+                color: $text-secondary;
+            }
+        }
+
+        &-actions {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid $border-color;
+
+            .btn-icon {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 6px;
+                color: $text-secondary;
+                transition: all 0.3s ease;
+                border: 1px solid $border-color;
+
+                &:hover {
+                    color: $primary-color;
+                    border-color: $primary-color;
+                    background: rgba($primary-color, 0.05);
+                }
+
+                &.delete:hover {
+                    color: $text-error;
+                    border-color: $text-error;
+                    background: rgba($text-error, 0.05);
+                }
+            }
+        }
+    }
+
+    .pipeline-table {
+        .ant-table {
+            background: transparent;
+
+            &-thead>tr>th {
+                background: $bg-secondary !important;
+                color: $text-primary !important;
+                border-bottom: 1px solid $border-color;
+                padding: 12px 16px;
+                font-weight: 600;
+            }
+
+            &-tbody>tr {
+                &:hover {
+                    td {
+                        background: rgba($primary-color, 0.02) !important;
+                    }
+                }
+
+                >td {
+                    border-bottom: 1px solid $border-color;
+                    background: transparent;
+                    padding: 12px 16px;
+                    color: $text-primary;
+
+                    &.action-column {
+                        padding: 12px !important;
+                        text-align: center;
+                    }
+                }
+            }
+        }
+
+        .pipeline-name {
+            font-weight: 500;
+            color: $text-primary;
+        }
+
+        .btn-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            color: $text-secondary;
+            transition: all 0.3s ease;
+            border: 1px solid $border-color;
+
+            &:hover {
+                color: $primary-color;
+                border-color: $primary-color;
+                background: rgba($primary-color, 0.05);
+            }
+
+            &.delete:hover {
+                color: $text-error;
+                border-color: $text-error;
+                background: rgba($text-error, 0.05);
+            }
+        }
+    }
+}
+
+// Dropdown styles
+.pipeline-actions-dropdown {
+    .ant-dropdown-menu {
+        padding: 4px;
+        border-radius: 8px;
+        border: 1px solid $border-color;
+        background: $bg-primary;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+        &-item {
+            padding: 8px 12px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: $text-primary;
+            transition: all 0.3s ease;
+
+            &:hover {
+                background: rgba($primary-color, 0.05);
+            }
+
+            &-danger {
+                color: $text-error !important;
+
+                &:hover {
+                    background: rgba($text-error, 0.05) !important;
+                    color: $text-error !important;
+                }
+            }
+        }
+
+        .ant-dropdown-menu-item-divider {
+            background-color: $border-color;
+            margin: 4px 0;
+        }
+    }
+}
+
+.text-error {
+    color: $text-error !important;
+}
+
+// Empty State Styles
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+    background: var(--bg-primary);
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    margin: 24px;
+    min-height: 300px;
+
+    .empty-icon {
+        font-size: 48px;
+        color: var(--text-secondary);
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    .empty-text {
+        font-size: 16px;
+        color: var(--text-secondary);
+        text-align: center;
+        margin: 0;
+    }
+}
+
+// Grid pagination styles
+.grid-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid $border-color;
+
+    .ant-pagination {
+        margin-top: 0;
+    }
+}
+
+
+// Pipeline view styles
+.pipeline-view {
+    padding: 0 16px 24px;
+    background: var(--bg-primary);
+    position: relative;
+
+    &-stats {
+        margin-bottom: 24px;
+
+        .pipeline-menu {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+
+            .total-stages-text {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-size: 14px;
+                min-width: 160px;
+                background: $bg-dark;
+                border: 1px solid $border-color;
+                height: 40px;
+
+                .menu-label {
+                    font-weight: 500;
+                    color: $text-secondary;
+                }
+
+                .menu-count {
+                    font-weight: 700;
+                    font-size: 16px;
+                    margin-left: 8px;
+                    display: inline-block;
+                    min-width: 24px;
+                    text-align: center;
+                    color: $primary-color;
+                }
+            }
+
+            .menu-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 8px 16px;
+                border-radius: 8px;
+                font-size: 14px;
+                min-width: 160px;
+                transition: all 0.3s ease;
+                height: 40px;
+
+                &:hover {
+                    transform: translateY(-2px);
+                }
+
+                &.active-menu-item {
+                    font-weight: 600;
+                    box-shadow: 0 4px 12px rgba($primary-color, 0.2);
+                }
+
+                .menu-label {
+                    font-weight: 500;
+                }
+
+                .menu-count {
+                    font-weight: 700;
+                    font-size: 16px;
+                    margin-left: 8px;
+                    display: inline-block;
+                    min-width: 24px;
+                    text-align: center;
+                }
+
+                &.ant-btn-primary {
+                    background: $primary-color;
+                    border-color: $primary-color;
+
+                    &:hover {
+                        color: white;
+                        background: $primary-color;
+                        opacity: 0.9;
+                    }
+                }
+
+                &:not(.ant-btn-primary):hover {
+                    color: $primary-color;
+                    background: $bg-dark;
+                    border-color: $primary-color;
+                }
+            }
+        }
+    }
+
+    .selected-divider {
+        margin-top: 30px;
+        margin-bottom: 20px;
+
+        .divider-text {
+            background-color: $bg-dark;
+            padding: 0 15px;
+            font-weight: 600;
+            font-size: 18px;
+        }
+
+        &::before,
+        &::after {
+            border-top-width: 2px;
+            border-color: $primary-color;
+        }
+    }
+
+    .stages-list {
+        background: transparent;
+        border-radius: $border-radius;
+        overflow: hidden;
+        border: none;
+        box-shadow: none;
+
+        .ant-list-item {
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: $border-radius;
+            margin-bottom: 8px;
+
+            &:hover {
+                background: var(--bg-light);
+            }
+        }
+
+        .stage-item {
+            &-content {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &-name {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                font-weight: 500;
+                color: var(--text-primary);
+
+                .default-badge {
+                    margin-right: 0;
+                    border-radius: 12px;
+                    padding: 0 8px;
+                    font-size: 11px;
+                    line-height: 1.5;
+                    background: $text-success !important;
+                    color: var(--text-white) !important;
+                    border: none;
+                }
+            }
+
+            &-order {
+                color: $text-secondary;
+                font-size: 13px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+
+                &::before {
+                    content: '';
+                    display: inline-block;
+                    width: 6px;
+                    height: 6px;
+                    border-radius: 50%;
+                    background-color: $text-secondary;
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        .lead-stage-item,
+        .proposal-stage-item {
+            border-left: 3px solid $primary-color;
+
+            &:hover {
+                background: $gradient-row;
+            }
+        }
+    }
+}
+
+// Pipeline name with count
+.pipeline-name {
+    .pipeline-count {
+        font-size: 12px;
+        color: $text-secondary;
+        margin-left: 4px;
+    }
+}
+
+.empty-stages-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    background: $bg-dark;
+    border-radius: $border-radius;
+    border: 1px dashed $border-color;
+    margin-top: 20px;
+
+    .ant-typography {
+        color: $text-secondary;
+        font-size: 16px;
+    }
+}

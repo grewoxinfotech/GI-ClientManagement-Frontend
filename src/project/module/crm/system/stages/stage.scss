@@ -1,0 +1,300 @@
+@use '../../../../../styles/variables' as *;
+
+.stage {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    box-shadow: 0 4px 20px $shadow-color;
+
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 24px;
+
+
+
+        &-actions {
+            display: flex;
+            align-items: center;
+
+            .pipeline-filter {
+                display: flex;
+                align-items: center;
+
+                .ant-select {
+                    .ant-select-selector {
+                        border-radius: 6px;
+                        height: 40px;
+                        display: flex;
+                        align-items: center;
+                        border-color: $border-color;
+                    }
+
+                    .ant-select-arrow {
+                        color: $text-secondary;
+                    }
+                }
+            }
+        }
+    }
+
+    &-content {
+        flex: 1;
+        padding: 24px;
+        overflow: auto;
+    }
+
+    &-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 24px;
+        padding: 4px;
+    }
+}
+
+// Container for grid view with pagination
+.stage-container {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+// Grid pagination styles
+.grid-pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid $border-color;
+
+    .ant-pagination {
+        margin-top: 0;
+    }
+}
+
+// Type styling for all views
+.type-label {
+    display: inline-flex;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    color: $text-primary;
+}
+
+// Default YES styling for all views
+.default-yes {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-success;
+}
+
+// No styling for all views
+.default-no {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    color: $text-secondary;
+}
+
+// Pipeline ID styling for all views
+.pipeline-id,
+.pipeline-name {
+    font-size: 12px;
+    color: $text-primary;
+    padding: 2px 4px;
+    border-radius: 4px;
+    display: inline-block;
+    max-width: 160px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.stage-card {
+    height: 100%;
+    background: $bg-primary;
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    padding: 20px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: $gradient-primary;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    &:hover {
+        border-color: $primary-color;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba($primary-color, 0.1);
+
+        &::before {
+            opacity: 0.02;
+        }
+
+        .stage-card-title {
+            color: $primary-color;
+        }
+    }
+
+    &-header {
+        margin-bottom: 16px;
+        position: relative;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    &-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: $primary-color;
+        margin: 0;
+        transition: color 0.3s ease;
+    }
+
+    &-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: relative;
+    }
+
+    &-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 12px;
+        background: $bg-light;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: $gradient-row;
+        }
+
+        .stat-value {
+            font-size: 15px;
+            font-weight: 600;
+            color: $primary-color;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: $text-secondary;
+        }
+    }
+
+    // Card specific styles for elements
+    .type-label,
+    .default-yes,
+    .default-no,
+    .pipeline-name,
+    .pipeline-id {
+        width: auto;
+        text-align: right;
+        justify-content: flex-end;
+    }
+}
+
+
+.text-error {
+    color: $text-error !important;
+}
+
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 0;
+    color: $text-secondary;
+
+    .empty-icon {
+        font-size: 48px;
+        margin-bottom: 16px;
+        opacity: 0.5;
+    }
+
+    .empty-text {
+        font-size: 16px;
+    }
+}
+
+// Responsive
+@media (max-width: 768px) {
+    .stage {
+        padding: 16px;
+
+        &-header {
+            flex-direction: column;
+            align-items: flex-start;
+
+
+
+            &-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+
+        &-content {
+            padding: 16px;
+        }
+    }
+}
+
+// Add a style for stage name
+.stage-name {
+    font-weight: 500;
+    color: $text-primary;
+}
+
+// Stage table styles
+.stage-table {
+    .ant-table {
+        background: transparent;
+
+        &-thead>tr>th {
+            background: $bg-secondary !important;
+            color: $text-primary !important;
+            border-bottom: 1px solid $border-color;
+            padding: 12px 16px;
+            font-weight: 600;
+        }
+
+        &-tbody>tr {
+            &:hover {
+                td {
+                    background: rgba($primary-color, 0.02) !important;
+                }
+            }
+
+            >td {
+                border-bottom: 1px solid $border-color;
+                background: transparent;
+                padding: 12px 16px;
+                color: $text-primary;
+
+                &.action-column {
+                    padding: 12px !important;
+                    text-align: center;
+                }
+            }
+        }
+    }
+
+}

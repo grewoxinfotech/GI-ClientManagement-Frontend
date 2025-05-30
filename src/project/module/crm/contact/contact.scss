@@ -1,0 +1,320 @@
+@use '../../../../styles/_variables.scss' as *;
+
+// Contact Module Styles
+.contact {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 100%;
+    overflow: hidden;
+
+    &-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+
+    }
+
+    // Grid View Styles
+    &-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+        padding: 4px;
+        width: 100%;
+
+        .contact-card {
+            width: 100%;
+            margin: 0 auto;
+            background: var(--bg-primary) !important;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 20px var(--shadow-color);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+
+            &::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: var(--primary-color);
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .ant-card-body {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 24px;
+            }
+
+            &-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                gap: 16px;
+                position: relative;
+                margin-bottom: 8px;
+            }
+        }
+    }
+
+    // List View Styles
+    &-list {
+        width: 100%;
+        overflow: hidden;
+        background: var(--bg-primary);
+        border: 1px solid var(--border-color);
+
+        .ant-table {
+            background: transparent;
+
+            &-thead>tr>th {
+                background: var(--bg-secondary) !important;
+                color: var(--text-primary) !important;
+                border-bottom: 1px solid var(--border-color);
+                padding: 10px 15px;
+                font-weight: 600;
+            }
+
+            &-tbody>tr {
+                &:hover {
+                    td {
+                        background: var(--primary-light) !important;
+                    }
+                }
+
+                >td {
+                    border-bottom: 1px solid var(--border-color);
+                    background: transparent;
+                    padding: 10px 15px;
+                    color: var(--text-primary);
+                }
+            }
+        }
+    }
+}
+
+// Contact Grid Styles
+.contact-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 24px;
+    padding: 4px;
+    width: 100%;
+}
+
+// Contact Card Styles
+.contact-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    height: 100%;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: $gradient-primary;
+        transform: translateY(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(45deg,
+                rgba($primary-color, 0.05) 0%,
+                rgba($primary-color, 0.02) 100%);
+        opacity: 0;
+        transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &:hover {
+        transform: translateY(-4px);
+        border-color: var(--primary-color) !important;
+        box-shadow:
+            0 8px 24px var(--shadow-color),
+            0 2px 4px rgba($primary-color, 0.1);
+
+        &::before {
+            transform: translateY(0);
+        }
+
+        &::after {
+            opacity: 1;
+        }
+
+        .contact-card-actions {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .contact-card-title {
+            background: $gradient-primary-hover;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+
+    .ant-card-body {
+        padding: 24px !important;
+        position: relative;
+        z-index: 1;
+    }
+
+    &-header {
+        margin-bottom: 20px;
+        position: relative;
+        padding-bottom: 16px;
+
+        &::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background: $gradient-primary;
+            transition: width 0.3s ease;
+        }
+    }
+
+    &:hover .contact-card-header::after {
+        width: 100%;
+    }
+
+    &-title {
+        font-size: 20px;
+        font-weight: 600;
+        margin-bottom: 4px;
+        background: $gradient-primary;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        transition: all 0.3s ease;
+    }
+
+    &-content {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        position: relative;
+        z-index: 1;
+    }
+
+    &-info {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: var(--text-secondary);
+        font-size: 14px;
+        padding: 8px 12px;
+        background: rgba($primary-color, 0.03);
+        border-radius: 8px;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background: rgba($primary-color, 0.08);
+            transform: translateX(4px);
+        }
+
+        svg {
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+    }
+
+    &-meta {
+        margin-top: 20px;
+        padding-top: 16px;
+        border-top: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-size: 13px;
+        color: var(--text-secondary);
+        position: relative;
+
+        div {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            &::before {
+                content: '';
+                width: 4px;
+                height: 4px;
+                background: var(--primary-color);
+                border-radius: 50%;
+                opacity: 0.5;
+            }
+        }
+    }
+
+    &-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border-color);
+        position: relative;
+        z-index: 1;
+
+        .btn-view {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+
+            svg {
+                font-size: 16px;
+                transition: transform 0.3s ease;
+            }
+
+            &:hover {
+                color: var(--primary-color);
+                border-color: var(--primary-color);
+                background: rgba($primary-color, 0.05);
+
+                svg {
+                    transform: scale(1.1);
+                }
+            }
+
+            &.delete:hover {
+                color: var(--text-error);
+                border-color: var(--text-error);
+                background: rgba($text-error, 0.05);
+            }
+        }
+    }
+}
