@@ -4,16 +4,28 @@ import PropTypes from 'prop-types';
 import CommonForm from './CommonForm';
 
 // Modal Title Component for reuse
-export const ModalTitle = ({ icon: Icon, title }) => (
-    <div className="modal-header">
-        <div className="modal-header-title">
-            {Icon && <Icon />} {title}
+export const ModalTitle = ({ icon, title }) => {
+    let IconComponent = null;
+    if (icon) {
+        if (typeof icon === 'function') {
+            const Icon = icon;
+            IconComponent = <Icon />;
+        } else {
+            IconComponent = icon;
+        }
+    }
+
+    return (
+        <div className="modal-header">
+            <div className="modal-header-title">
+                {IconComponent} {title}
+            </div>
         </div>
-    </div>
-);
+    );
+};
 
 ModalTitle.propTypes = {
-    icon: PropTypes.elementType,
+    icon: PropTypes.oneOfType([PropTypes.elementType, PropTypes.node]),
     title: PropTypes.string.isRequired
 };
 

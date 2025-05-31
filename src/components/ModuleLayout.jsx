@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Space } from 'antd';
+import { Typography } from 'antd';
 import { RiLayoutGridLine, RiListUnordered } from 'react-icons/ri';
 import { PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
@@ -26,8 +26,8 @@ const ModuleLayout = ({
         if (!showAddButton) return null;
 
         return (
-            <button className="btn btn-primary btn-lg" onClick={onAddClick}>
-                <PlusOutlined /> {addButtonText || defaultAddButtonText}
+            <button className="btn btn-primary add-button" onClick={onAddClick}>
+                <PlusOutlined /> <span className="btn-text">{addButtonText || defaultAddButtonText}</span>
             </button>
         );
     };
@@ -35,29 +35,31 @@ const ModuleLayout = ({
     return (
         <div className={`module-container ${className}`}>
             <div className="module-header">
-                <Title level={2} className="mfh_title">{title}</Title>
+                <div className="module-header-title">
+                    <Title level={2} className="mfh_title">{title}</Title>
+                </div>
                 <div className="module-header-actions">
-                    <Space size={8}>
-                        {extraHeaderContent}
-                        {showViewToggle && (
-                            <div className="view-toggle" data-mode={viewMode}>
-                                <button
-                                    className={`btn btn-icon ${viewMode === 'list' ? 'btn-primary' : 'btn-ghost'}`}
-                                    onClick={() => onViewModeChange('list')}
-                                >
-                                    <RiListUnordered />
-                                </button>
-                                <button
-                                    className={`btn btn-icon ${viewMode === 'grid' ? 'btn-primary' : 'btn-ghost'}`}
-                                    onClick={() => onViewModeChange('grid')}
-                                >
-                                    <RiLayoutGridLine />
-                                </button>
-                            </div>
-                        )}
-                        {renderAddButton()}
-                        {actionButtons}
-                    </Space>
+                    {extraHeaderContent}
+                    {showViewToggle && (
+                        <div className="view-toggle" data-mode={viewMode}>
+                            <button
+                                className={`btn btn-icon ${viewMode === 'list' ? 'btn-primary' : 'btn-ghost'}`}
+                                onClick={() => onViewModeChange('list')}
+                                title="List View"
+                            >
+                                <RiListUnordered />
+                            </button>
+                            <button
+                                className={`btn btn-icon ${viewMode === 'grid' ? 'btn-primary' : 'btn-ghost'}`}
+                                onClick={() => onViewModeChange('grid')}
+                                title="Grid View"
+                            >
+                                <RiLayoutGridLine />
+                            </button>
+                        </div>
+                    )}
+                    {renderAddButton()}
+                    {actionButtons}
                 </div>
             </div>
             <div className="module-content">

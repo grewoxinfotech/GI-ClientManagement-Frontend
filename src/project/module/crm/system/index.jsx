@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { lazy, Suspense, useState, useEffect } from 'react';
 import { Menu, Spin, Modal, message } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -113,7 +113,7 @@ export const SystemModule = ({
 
             {deleteModal && (
                 <Modal
-                    title={<ModalTitle icon={DeleteOutlined} title={deleteTitle} />}
+                    title={<ModalTitle icon={<DeleteOutlined />} title={deleteTitle} />}
                     open={deleteModal.visible}
                     onOk={onDeleteConfirm}
                     onCancel={onDeleteCancel}
@@ -138,6 +138,26 @@ export const SystemModule = ({
 const System = () => {
     const navigate = useNavigate();
     const { name } = useParams();
+    const [menuMode, setMenuMode] = useState('inline');
+    const [isMobileView, setIsMobileView] = useState(false);
+
+    // Check screen size on mount and resize
+    useEffect(() => {
+        const handleResize = () => {
+            const isMobile = window.innerWidth <= 1024;
+            setMenuMode(isMobile ? 'horizontal' : 'inline');
+            setIsMobileView(isMobile);
+        };
+
+        // Set initial mode
+        handleResize();
+
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+
+        // Clean up
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const currentModule = name ? SYSTEM_MODULES[name] : SYSTEM_MODULES.pipeline;
     const CurrentComponent = currentModule?.component || Pipeline;
@@ -146,19 +166,46 @@ const System = () => {
         navigate(`/admin/crm/system/${key}`);
     };
 
+    // Calculate menu container styles
+    const getMenuContainerStyle = () => {
+        if (isMobileView) {
+            return {
+                display: 'flex',
+                justifyContent: 'flex-start',
+                width: '100%',
+                maxWidth: '100%',
+                background: 'white',
+                borderRadius: '8px 8px 0 0',
+                padding: '0',
+                overflow: 'hidden',
+                borderBottom: '1px solid #eaeaea'
+            };
+        }
+        return {
+            width: '200px',
+            minWidth: '200px',
+            height: '100%'
+        };
+    };
+
     return (
         <div className="system-container">
-            <Menu
-                mode="inline"
-                className="system-menu"
-                selectedKeys={[currentModule?.key || 'pipeline']}
-                items={Object.values(SYSTEM_MODULES).map(module => ({
-                    key: module.key,
-                    icon: module.icon,
-                    label: module.label,
-                    onClick: () => handleMenuClick(module.key)
-                }))}
-            />
+            <div style={getMenuContainerStyle()}>
+                <Menu
+                    mode={menuMode}
+                    className="system-menu"
+                    selectedKeys={[currentModule?.key || 'pipeline']}
+                    disabledOverflow={true}
+                    overflowedIndicator={null}
+                    style={{ paddingLeft: isMobileView ? 0 : '14px', width: '100%' }}
+                    items={Object.values(SYSTEM_MODULES).map(module => ({
+                        key: module.key,
+                        icon: module.icon,
+                        label: module.label,
+                        onClick: () => handleMenuClick(module.key)
+                    }))}
+                />
+            </div>
             <div className="system-content">
                 <Suspense fallback={<LoadingSpinner />}>
                     <CurrentComponent />

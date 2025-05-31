@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table, Dropdown, Input, Button, Space, Empty } from 'antd';
-import { SearchOutlined, MoreOutlined } from '@ant-design/icons';
+import { SearchOutlined, MoreOutlined, FilterOutlined } from '@ant-design/icons';
 
 const CommonTable = ({
     data = [],
@@ -70,24 +70,36 @@ const CommonTable = ({
         filterIcon: filtered => (
             <SearchOutlined style={{ color: filtered ? 'var(--primary-color)' : undefined }} />
         ),
-        onFilter: (value, record) =>
-            record[dataIndex]
+        onFilter: (value, record) => {
+            if (dataIndex === 'source') {
+                return record[dataIndex] === value;
+            }
+
+            return record[dataIndex]
                 ? record[dataIndex].toString().toLowerCase().includes(value.toLowerCase())
-                : '',
+                : '';
+        },
         filteredValue: searchedColumn === dataIndex ? [searchText] : null
     });
 
     const enhancedColumns = columns.map(column => {
         let enhancedColumn = { ...column };
+        const dataIndex = column.dataIndex || column.name;
 
-        if (searchableColumns.includes(column.dataIndex)) {
+        if (searchableColumns.includes(dataIndex)) {
             enhancedColumn = {
                 ...enhancedColumn,
-                ...getColumnSearchProps(column.dataIndex)
+                ...getColumnSearchProps(dataIndex)
             };
         }
 
-        if (dateColumns.includes(column.dataIndex) && !column.render) {
+        if (column.filters) {
+            enhancedColumn.filterIcon = filtered => (
+                <FilterOutlined style={{ color: filtered ? 'var(--primary-color)' : undefined }} />
+            );
+        }
+
+        if (dateColumns.includes(dataIndex) && !column.render) {
             enhancedColumn.render = (value, record) => {
                 const dateValue = value || (column.fallbackField && record[column.fallbackField]);
                 return formatDate(dateValue);
@@ -123,7 +135,9 @@ const CommonTable = ({
                 dataSource={data}
                 rowKey="id"
                 loading={isLoading}
-                onChange={(newPagination) => pagination.onChange(newPagination.current, newPagination.pageSize)}
+                onChange={(newPagination, filters, sorter) => {
+                    pagination.onChange(newPagination.current, newPagination.pageSize);
+                }}
                 pagination={{
                     current: pagination.current,
                     pageSize: pagination.pageSize,

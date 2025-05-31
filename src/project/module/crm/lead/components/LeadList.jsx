@@ -111,7 +111,10 @@ const LeadList = ({
         {
             name: 'source',
             title: 'Source',
-            render: (sourceId) => sourceId ? <span>{getSourceName(sourceId)}</span> : null
+            render: (sourceId) => sourceId ? <span>{getSourceName(sourceId)}</span> : null,
+            filters: sources.map(source => ({ text: source.name, value: source.id })),
+            onFilter: (value, record) => record.source === value,
+            filterSearch: true
         },
         {
             name: 'status',
@@ -123,14 +126,26 @@ const LeadList = ({
                     checkedChildren="Open"
                     unCheckedChildren="Closed"
                 />
-            )
+            ),
+            filters: [
+                { text: 'Open', value: 'open' },
+                { text: 'Closed', value: 'closed' }
+            ],
+            onFilter: (value, record) => record.status === value
         },
         {
             name: 'priority',
             title: 'Priority',
             render: (priority) => priority ?
                 <span style={{ fontWeight: 'bold', color: getPriorityColor(priority) }}>{priority}</span>
-                : null
+                : null,
+            filters: [
+                { text: 'High', value: 'high' },
+                { text: 'Medium', value: 'medium' },
+                { text: 'Low', value: 'low' }
+            ],
+            onFilter: (value, record) => record.priority === value,
+            filterSearch: true
         }
     ];
 
@@ -189,7 +204,7 @@ const LeadList = ({
                     itemName: 'leads',
                     className: 'lead-table'
                 }}
-                searchableColumns={['leadTitle', 'status', 'priority']}
+                searchableColumns={['leadTitle', 'status', 'priority', 'source']}
             />
         </div>
     );

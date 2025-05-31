@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Modal, message, Select } from 'antd';
-import { DeleteOutlined } from '@ant-design/icons';
+import { DeleteOutlined, FilterOutlined } from '@ant-design/icons';
 import { RiFileList3Line } from 'react-icons/ri';
 import LeadList from './components/LeadList';
 import LeadForm from './components/LeadForm';
@@ -11,7 +11,8 @@ import {
     useCreateLeadMutation,
     useUpdateLeadMutation,
     useGetPipelinesQuery,
-    useGetStagesQuery
+    useGetStagesQuery,
+    useGetFiltersQuery
 } from '../../../../config/api/apiServices';
 import { ModalTitle } from '../../../../components/AdvancedForm';
 import ModuleLayout from '../../../../components/ModuleLayout';
@@ -19,6 +20,110 @@ import FancyLoader from '../../../../components/FancyLoader';
 import './lead.scss';
 
 const { Option } = Select;
+
+// Separate component for filter
+const ModuleFilter = ({ selectedPipeline, handlePipelineChange, pipelines }) => {
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 576);
+    const filterRef = useRef(null);
+
+    // Check screen size on mount and resize
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth <= 576);
+            // Close filter dropdown when resizing up from mobile
+            if (window.innerWidth > 576) {
+                setIsFilterOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        // Handle click outside to close the filter on mobile
+        const handleClickOutside = (event) => {
+            if (filterRef.current && !filterRef.current.contains(event.target)) {
+                setIsFilterOpen(false);
+            }
+        };
+
+        // Add click listener for outside clicks
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Cleanup listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const toggleFilter = (e) => {
+        e.stopPropagation(); // Prevent event bubbling
+        setIsFilterOpen(!isFilterOpen);
+    };
+
+    const closeFilter = () => {
+        setIsFilterOpen(false);
+    };
+
+    const filters = [
+        {
+            key: 'pipeline',
+            placeholder: 'All Pipelines',
+            value: selectedPipeline,
+            onChange: (val) => {
+                handlePipelineChange(val);
+                if (isMobileView) {
+                    closeFilter();
+                }
+            },
+            allowClear: false,
+            options: pipelines.map(pipeline => ({
+                key: pipeline.id,
+                value: pipeline.id,
+                label: pipeline.name
+            }))
+        }
+        // Other filters can be added here in the future
+    ];
+
+    return (
+        <div className="filter-container">
+            {filters.map(filter => (
+                <div
+                    key={filter.key}
+                    className={`module-filter ${isFilterOpen ? 'open' : ''}`}
+                    ref={filterRef}
+                >
+                    {isMobileView && (
+                        <div className={`filter-icon ${isFilterOpen ? 'active' : ''}`} onClick={toggleFilter}>
+                            <FilterOutlined />
+                        </div>
+                    )}
+                    <Select
+                        placeholder={filter.placeholder}
+                        style={{ width: '100%' }}
+                        value={filter.value}
+                        onChange={filter.onChange}
+                        allowClear={filter.allowClear !== false}
+                        showSearch
+                        optionFilterProp="children"
+                        onBlur={isMobileView ? closeFilter : undefined}
+                        onClick={(e) => isMobileView && e.stopPropagation()}
+                        dropdownStyle={{ minWidth: '180px' }}
+                    >
+                        {filter.options.map(option => (
+                            <Option key={option.key} value={option.value}>
+                                {option.label}
+                            </Option>
+                        ))}
+                    </Select>
+                </div>
+            ))}
+        </div>
+    );
+};
 
 const Lead = () => {
     const [viewMode, setViewMode] = useState('list');
@@ -42,6 +147,10 @@ const Lead = () => {
 
     const { data: pipelinesResponse } = useGetPipelinesQuery({ limit: 'all' });
     const pipelines = pipelinesResponse?.data?.items || [];
+
+    const { data: filtersResponse } = useGetFiltersQuery({ limit: 'all' });
+    const filters = filtersResponse?.data?.items || [];
+    const sources = filters.filter(filter => filter.type === 'source');
 
     useEffect(() => {
         if (!selectedPipeline && pipelines.length > 0) {
@@ -187,22 +296,6 @@ const Lead = () => {
         }
     };
 
-    const renderPipelineFilter = () => (
-        <Select
-            placeholder="All Pipelines"
-            style={{ width: '150px' }}
-            value={selectedPipeline}
-            onChange={handlePipelineChange}
-            allowClear={false}
-            showSearch
-            optionFilterProp="children"
-        >
-            {pipelines.map(pipeline => (
-                <Option key={pipeline.id} value={pipeline.id}>{pipeline.name}</Option>
-            ))}
-        </Select>
-    );
-
     // Loading state
     const isLoading = isClientSideFiltering ? isAllLeadsLoading : isFilteredLeadsLoading;
 
@@ -226,7 +319,11 @@ const Lead = () => {
             onViewModeChange={handleViewModeChange}
             onAddClick={handleAdd}
             className="lead"
-            extraHeaderContent={renderPipelineFilter()}
+            extraHeaderContent={<ModuleFilter
+                selectedPipeline={selectedPipeline}
+                handlePipelineChange={handlePipelineChange}
+                pipelines={pipelines}
+            />}
         >
             {viewMode === 'grid' ? (
                 <LeadKanbanView

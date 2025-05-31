@@ -1,66 +1,6 @@
 @use './_variables.scss' as *;
 
 
-// Common toggle button styles
-.view-toggle {
-    display: flex;
-    align-items: center;
-    background: var(--bg-light);
-    padding: 3px;
-    border: 1px solid var(--border-light);
-    position: relative;
-    overflow: hidden;
-
-    &::before {
-        content: '';
-        position: absolute;
-        height: calc(100% - 6px);
-        background: var(--primary-color);
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        left: 3px;
-        transform: translateX(0%);
-    }
-
-    &[data-mode='list']::before {
-        transform: translateX(calc(100% + 3px));
-    }
-
-    .toggle-btn {
-        width: 40px;
-        height: 36px;
-        padding: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border: none;
-        position: relative;
-        transition: all 0.3s ease;
-        z-index: 1;
-
-        svg {
-            font-size: 20px;
-            transition: all 0.3s ease;
-        }
-
-        &[type='primary'] {
-            color: white;
-        }
-
-        &[type='text'] {
-            color: var(--text-secondary) !important;
-
-            &:hover {
-                color: var(--primary-color) !important;
-            }
-        }
-    }
-}
-
-
-
-
-
-
 .ant-dropdown-arrow {
     &::before {
         background: var(--bg-primary) !important;
@@ -341,16 +281,6 @@
     }
 }
 
-.mfh_title {
-    margin: 0;
-    color: $text-primary;
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    background: $gradient-primary;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
 
 .ant-radio-wrapper {
     color: $text-primary;

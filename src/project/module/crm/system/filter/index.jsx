@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { message, Select } from 'antd';
-import { RiFilterLine } from 'react-icons/ri';
+import { RiFilterLine, RiFilterLine as FilterOutlined } from 'react-icons/ri';
 import FilterList from './components/FilterList';
 import FilterForm from './components/FilterForm';
 import {
@@ -13,6 +13,104 @@ import { SystemModule } from '../../system';
 import './filter.scss';
 
 const { Option } = Select;
+
+// Filter types
+const filterTypes = [
+    { value: 'tag', label: 'Tag' },
+    { value: 'status', label: 'Status' },
+    { value: 'label', label: 'Label' },
+    { value: 'source', label: 'Source' },
+    { value: 'category', label: 'Category' },
+];
+
+// Separate component for type filter
+const TypeFilter = ({ selectedType, handleTypeChange }) => {
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 576);
+    const filterRef = useRef(null);
+
+    // Check screen size on mount and resize
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobileView(window.innerWidth <= 576);
+            // Close filter dropdown when resizing up from mobile
+            if (window.innerWidth > 576) {
+                setIsFilterOpen(false);
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    useEffect(() => {
+        // Handle click outside to close the filter on mobile
+        const handleClickOutside = (event) => {
+            if (filterRef.current && !filterRef.current.contains(event.target)) {
+                setIsFilterOpen(false);
+            }
+        };
+
+        // Add click listener for outside clicks
+        document.addEventListener('mousedown', handleClickOutside);
+
+        // Cleanup listener on component unmount
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
+
+    const toggleFilter = (e) => {
+        e.stopPropagation(); // Prevent event bubbling
+        setIsFilterOpen(!isFilterOpen);
+    };
+
+    const closeFilter = () => {
+        setIsFilterOpen(false);
+    };
+
+    return (
+        <div className="filter-container">
+            <div
+                className={`module-filter ${isFilterOpen ? 'open' : ''}`}
+                ref={filterRef}
+            >
+                {isMobileView && (
+                    <div
+                        className={`filter-icon ${isFilterOpen ? 'active' : ''}`}
+                        onClick={toggleFilter}
+                    >
+                        <FilterOutlined />
+                    </div>
+                )}
+                <Select
+                    placeholder="All Types"
+                    style={{ width: '100%' }}
+                    value={selectedType}
+                    onChange={(val) => {
+                        handleTypeChange(val);
+                        if (isMobileView) {
+                            closeFilter();
+                        }
+                    }}
+                    allowClear={false}
+                    showSearch
+                    optionFilterProp="children"
+                    onBlur={isMobileView ? closeFilter : undefined}
+                    onClick={(e) => isMobileView && e.stopPropagation()}
+                    dropdownStyle={{ minWidth: '220px' }}
+                    dropdownMatchSelectWidth={false}
+                    className="filter-select"
+                >
+                    <Option value="all">All Types</Option>
+                    {filterTypes.map(type => (
+                        <Option key={type.value} value={type.value}>{type.label}</Option>
+                    ))}
+                </Select>
+            </div>
+        </div>
+    );
+};
 
 const Filter = () => {
     const [viewMode, setViewMode] = useState('grid');
@@ -28,7 +126,7 @@ const Filter = () => {
     const { data: response, isLoading } = useGetFiltersQuery({
         page: currentPage,
         limit: pageSize,
-        ...filterParams
+        ...(selectedType !== 'all' ? { type: selectedType } : {})
     });
 
     const [deleteFilter, { isLoading: isDeleting }] = useDeleteFilterMutation();
@@ -93,31 +191,6 @@ const Filter = () => {
         }
     };
 
-    const filterTypes = [
-        { value: 'tag', label: 'Tag' },
-        { value: 'status', label: 'Status' },
-        { value: 'label', label: 'Label' },
-        { value: 'source', label: 'Source' },
-        { value: 'category', label: 'Category' },
-    ];
-
-    const renderTypeFilter = () => (
-        <Select
-            placeholder="All Types"
-            style={{ width: '150px' }}
-            value={selectedType}
-            onChange={handleTypeChange}
-            allowClear={false}
-            showSearch
-            optionFilterProp="children"
-        >
-            <Option value="all">All Types</Option>
-            {filterTypes.map(type => (
-                <Option key={type.value} value={type.value}>{type.label}</Option>
-            ))}
-        </Select>
-    );
-
     return (
         <SystemModule
             title="Filters"
@@ -126,7 +199,7 @@ const Filter = () => {
             onViewModeChange={handleViewModeChange}
             onAddClick={handleAdd}
             className="filter"
-            extraHeaderContent={renderTypeFilter()}
+            extraHeaderContent={<TypeFilter selectedType={selectedType} handleTypeChange={handleTypeChange} />}
             formModal={formModal}
             deleteModal={deleteModal}
             onFormCancel={handleFormCancel}
