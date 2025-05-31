@@ -88,7 +88,7 @@ export const SystemModule = ({
                     open={formModal.visible}
                     onCancel={onFormCancel}
                     footer={null}
-                    width={800}
+                    width={500}
                     className="modal"
                     maskClosable={true}
                     bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}
@@ -103,7 +103,7 @@ export const SystemModule = ({
                     open={viewModal.visible}
                     onCancel={onViewCancel}
                     footer={null}
-                    width={800}
+                    width={500}
                     className="modal"
                     maskClosable={true}
                 >

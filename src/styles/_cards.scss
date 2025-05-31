@@ -8,24 +8,6 @@
     position: relative;
     overflow: visible !important;
 
-    &:hover {
-        transform: translateY(-4px);
-        box-shadow:
-            0 8px 24px var(--shadow-color),
-            0 2px 4px rgba($primary-color, 0.1);
-
-        .module-card-actions {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .module-card-title {
-            background: $gradient-primary-hover;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-    }
 
     .ant-card-body {
         padding: 24px !important;
@@ -35,7 +17,9 @@
         display: flex;
         flex-direction: column;
         overflow: visible !important;
+        border-radius: 0 0 8px 8px !important;
     }
+
 
     &-header {
         margin-bottom: 20px;

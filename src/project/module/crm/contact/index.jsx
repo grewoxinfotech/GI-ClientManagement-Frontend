@@ -122,7 +122,7 @@ const Contact = () => {
                 open={formModal.visible}
                 onCancel={handleFormCancel}
                 footer={null}
-                width={800}
+                width={700}
                 className="modal"
                 maskClosable={true}
             >
@@ -142,7 +142,7 @@ const Contact = () => {
             />
 
             <Modal
-                title={<ModalTitle icon={DeleteOutlined} title="Delete Contact" />}
+                title={<ModalTitle icon={<DeleteOutlined />} title="Delete Contact" />}
                 open={deleteModal.visible}
                 onOk={handleDeleteConfirm}
                 onCancel={handleDeleteCancel}

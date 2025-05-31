@@ -179,7 +179,7 @@ const User = () => {
             />
 
             <Modal
-                title={<ModalTitle icon={DeleteOutlined} title="Delete User" />}
+                title={<ModalTitle icon={<DeleteOutlined />} title="Delete User" />}
                 open={deleteModal.visible}
                 onOk={handleDeleteConfirm}
                 onCancel={handleDeleteCancel}

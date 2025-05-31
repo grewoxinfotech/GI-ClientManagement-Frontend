@@ -358,7 +358,7 @@ const Lead = () => {
                 open={formModal.visible}
                 onCancel={handleFormCancel}
                 footer={null}
-                width={800}
+                width={700}
                 className="modal"
                 maskClosable={true}
                 bodyStyle={{ maxHeight: '70vh', overflowY: 'auto' }}
@@ -374,7 +374,7 @@ const Lead = () => {
             </Modal>
 
             <Modal
-                title={<ModalTitle icon={DeleteOutlined} title="Delete Lead" />}
+                title={<ModalTitle icon={<DeleteOutlined />} title="Delete Lead" />}
                 open={deleteModal.visible}
                 onOk={handleDeleteConfirm}
                 onCancel={handleDeleteCancel}
