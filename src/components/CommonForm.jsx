@@ -1,6 +1,19 @@
 import React, { useEffect } from 'react';
 import { Form, Button, Space } from 'antd';
 import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
+
+const formVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.4,
+            ease: "easeOut"
+        }
+    }
+};
 
 const CommonForm = ({
     initialValues,
@@ -31,34 +44,49 @@ const CommonForm = ({
     };
 
     return (
-        <Form
-            form={formInstance}
-            layout={layout}
-            onFinish={handleSubmit}
-            className={`${className}`}
+        <motion.div
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
         >
-            {children}
+            <Form
+                form={formInstance}
+                layout={layout}
+                onFinish={handleSubmit}
+                className={`${className}`}
+            >
+                {children}
 
-            <div className="form-actions">
-                <Space size={16}>
-                    <Button
-                        onClick={onCancel}
-                        className="btn btn-secondary"
-                        type="default"
-                    >
-                        {cancelButtonText || 'Cancel'}
-                    </Button>
-                    <Button
-                        type="primary"
-                        htmlType="submit"
-                        loading={isSubmitting}
-                        className="btn btn-primary"
-                    >
-                        {submitButtonText || (isEditing ? 'Update' : 'Create')}
-                    </Button>
-                </Space>
-            </div>
-        </Form>
+                <motion.div
+                    className="form-actions"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.3, duration: 0.4 }}
+                >
+                    <Space size={16}>
+                        <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                            <Button
+                                onClick={onCancel}
+                                className="btn btn-secondary"
+                                type="default"
+                            >
+                                {cancelButtonText || 'Cancel'}
+                            </Button>
+                        </motion.div>
+                        <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
+                            <Button
+                                type="primary"
+                                htmlType="submit"
+                                loading={isSubmitting}
+                                className="btn btn-primary"
+                            >
+                                {submitButtonText || (isEditing ? 'Update' : 'Create')}
+                            </Button>
+                        </motion.div>
+                    </Space>
+                </motion.div>
+            </Form>
+        </motion.div>
     );
 };
 

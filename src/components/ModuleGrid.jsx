@@ -1,6 +1,26 @@
 import React from 'react';
 import { Empty, Pagination } from 'antd';
 import PropTypes from 'prop-types';
+import { motion } from 'framer-motion';
+
+const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+        opacity: 1,
+        transition: {
+            staggerChildren: 0.1
+        }
+    }
+};
+
+const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.4, type: "spring", stiffness: 100 }
+    }
+};
 
 const ModuleGrid = ({
     items = [],
@@ -12,22 +32,48 @@ const ModuleGrid = ({
 }) => {
     if (items.length === 0 && !isLoading) {
         return (
-            <Empty
-                className="empty-state"
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                description={emptyMessage}
-            />
+            <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                style={{ overflow: "visible" }}
+            >
+                <Empty
+                    className="empty-state"
+                    image={Empty.PRESENTED_IMAGE_SIMPLE}
+                    description={emptyMessage}
+                />
+            </motion.div>
         );
     }
 
     return (
-        <div className={`module-grid-container ${className}`}>
+        <motion.div
+            className={`module-grid-container ${className}`}
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            style={{ overflow: "visible" }}
+        >
             <div className="module-grid">
-                {items.map((item, index) => renderItem(item, index))}
+                {items.map((item, index) => (
+                    <motion.div
+                        key={item.id || index}
+                        variants={itemVariants}
+                        style={{ overflow: "visible" }}
+                    >
+                        {renderItem(item, index)}
+                    </motion.div>
+                ))}
             </div>
 
             {pagination && (
-                <div className="grid-pagination">
+                <motion.div
+                    className="grid-pagination"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.5 }}
+                >
                     <Pagination
                         current={pagination.current}
                         pageSize={pagination.pageSize}
@@ -37,9 +83,9 @@ const ModuleGrid = ({
                         showTotal={pagination.showTotal}
                         showQuickJumper={pagination.showQuickJumper}
                     />
-                </div>
+                </motion.div>
             )}
-        </div>
+        </motion.div>
     );
 };
 

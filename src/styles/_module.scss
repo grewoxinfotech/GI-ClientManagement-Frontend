@@ -6,7 +6,7 @@
     flex-direction: column;
     gap: 24px;
     height: 100%;
-    overflow: hidden;
+    overflow: visible !important;
 
     .module-header {
         display: flex;
@@ -14,6 +14,7 @@
         align-items: center;
         gap: 16px;
         width: 100%;
+        overflow: visible !important;
 
         &-title {
             flex: 1;
@@ -39,12 +40,13 @@
             align-items: center;
             gap: 16px;
             flex-shrink: 0;
+            overflow: visible !important;
 
             .view-toggle {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                overflow: visible;
+                overflow: visible !important;
                 border: 1px solid var(--border-color);
                 border-radius: 0;
                 width: 80px;
@@ -83,7 +85,7 @@
 
     .module-content {
         flex: 1;
-        overflow: auto;
+        overflow: visible !important;
         display: flex;
         flex-direction: column;
     }

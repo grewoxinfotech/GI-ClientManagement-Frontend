@@ -6,7 +6,7 @@
     height: 100%;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
-    overflow: hidden;
+    overflow: visible !important;
 
     &:hover {
         transform: translateY(-4px);
@@ -34,6 +34,7 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        overflow: visible !important;
     }
 
     &-header {
@@ -97,6 +98,7 @@
         position: relative;
         z-index: 1;
         flex: 1;
+        overflow: visible !important;
     }
 
     &-info {
@@ -141,6 +143,7 @@
         font-size: 13px;
         color: $text-secondary;
         position: relative;
+        overflow: visible !important;
 
         div {
             display: flex;
@@ -167,6 +170,7 @@
         border-top: 1px solid $border-color;
         position: relative;
         z-index: 1;
+        overflow: visible !important;
 
         .btn-view {
             flex: 1;
@@ -216,6 +220,11 @@
     padding: 4px;
     width: 100%;
     min-height: 100px;
+    overflow: visible !important;
+}
+
+.module-grid-container {
+    overflow: visible !important;
 }
 
 .empty-state {
