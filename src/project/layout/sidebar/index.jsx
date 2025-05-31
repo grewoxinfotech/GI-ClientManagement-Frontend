@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Typography, Avatar, Tooltip } from 'antd';
+import { Layout, Menu, Typography, Avatar, Tooltip, Button } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentUser, selectUserRole } from '../../../auth/services/authSlice';
 import {
@@ -14,12 +13,15 @@ import {
     RiContactsLine,
     RiShieldUserLine,
     RiUserSettingsLine,
+    RiArrowLeftSLine
 } from 'react-icons/ri';
 import './styles.scss';
 import { useLogout } from '../../../utils/hooks/useLogout';
-const { Sider } = Layout;
 
-const DashboardSidebar = ({ collapsed }) => {
+const { Sider } = Layout;
+const { Title } = Typography;
+
+const DashboardSidebar = ({ collapsed, isMobile, onBackClick }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const dispatch = useDispatch();
@@ -107,6 +109,11 @@ const DashboardSidebar = ({ collapsed }) => {
         }
 
         navigate(key);
+
+        // Close mobile sidebar after navigation
+        if (isMobile && onBackClick) {
+            onBackClick();
+        }
     };
 
     const logoVariants = {
@@ -141,15 +148,20 @@ const DashboardSidebar = ({ collapsed }) => {
                 transition: 'all 0.2s ease-in-out'
             }}
         >
-            <motion.div className="sidebar-logo">
-                <motion.div
-                    variants={logoVariants}
-                    animate={collapsed ? 'collapsed' : 'expanded'}
-                    className="sidebar-logo-text"
-                >
-                    {collapsed ? 'A' : 'Admin'}
-                </motion.div>
-            </motion.div>
+            <div className="sidebar-logo">
+                {isMobile && (
+                    <Button
+                        type="text"
+                        icon={<RiArrowLeftSLine />}
+                        onClick={onBackClick}
+                        className="back-button"
+                        style={{ outline: 'none' }}
+                    />
+                )}
+                <Title level={4} className="sidebar-logo-text">
+                    {collapsed && !isMobile ? 'A' : 'Admin'}
+                </Title>
+            </div>
 
             <Menu
                 mode="inline"
@@ -161,7 +173,7 @@ const DashboardSidebar = ({ collapsed }) => {
             />
 
             <div className="sidebar-footer">
-                {collapsed ? (
+                {collapsed && !isMobile ? (
                     <div className="sidebar-footer-collapsed">
                         <Tooltip title={user?.username || 'User'} placement="right">
                             <Avatar className="sidebar-footer-avatar">

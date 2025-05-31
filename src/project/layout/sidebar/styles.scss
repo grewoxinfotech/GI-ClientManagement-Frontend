@@ -28,11 +28,38 @@
         h1 {
             margin: 0;
             color: var(--primary-color);
-            font-size: 20px;
+            font-size: 20px !important;
             font-weight: 600;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+    }
+
+    .back-button {
+        background-color: white;
+        color: var(--primary-color);
+        border: none;
+        height: 32px;
+        width: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        position: absolute;
+        right: 16px;
+        z-index: 5;
+
+        svg {
+            font-size: 24px;
+        }
+
+        &:hover {
+            background-color: $bg-secondary !important;
+            color: var(--primary-color) !important;
+            transform: scale(1.05);
+            transition: all 0.3s ease;
         }
     }
 
@@ -224,18 +251,23 @@
 
     .sidebar-logo {
         height: $header-height;
-        @include flex-center;
-        padding: 16px;
+        padding: 0;
         background: $gradient-primary;
         overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
 
         &-text {
-            margin: 0;
-            color: var(--white);
-            font-size: 20px;
-            font-weight: 600;
+            margin: 0 !important;
+            color: var(--white) !important;
+            font-size: 20px !important;
+            font-weight: 600 !important;
             white-space: nowrap;
             transition: all 0.2s ease;
+            text-align: center;
+            width: 100%;
         }
     }
 
@@ -444,4 +476,24 @@
             font-size: 20px;
         }
     }
+}
+
+// Mobile specific styles
+@media (max-width: 768px) {
+    .dashboard-sidebar {
+        z-index: 1001 !important;
+
+        .sidebar-logo {
+            padding: 0;
+
+            .back-button {
+                position: absolute;
+                right: 16px;
+            }
+        }
+    }
+}
+
+.ant-menu-submenu-popup {
+    width: 0% !important;
 }

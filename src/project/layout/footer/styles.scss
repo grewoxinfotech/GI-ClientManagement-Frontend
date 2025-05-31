@@ -25,9 +25,7 @@
       transition: all 0.3s ease;
 
       &:hover {
-        background: $gradient-primary;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: var(--primary-color);
       }
     }
   }
@@ -41,13 +39,70 @@
       transition: all 0.3s ease;
 
       &:hover {
-        background: $gradient-primary;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: var(--primary-color);
       }
 
       .anticon {
         font-size: 16px;
+      }
+    }
+  }
+}
+
+// Responsive styles for footer
+@media screen and (max-width: 1024px) {
+  .dashboard-footer {
+    &-content {
+      gap: 10px;
+    }
+
+    &-links {
+      gap: 16px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .dashboard-footer {
+    &-content {
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+    }
+
+    &-copyright {
+      font-size: 12px;
+    }
+
+    &-links {
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .ant-typography {
+        font-size: 12px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .dashboard-footer {
+    padding: 10px;
+
+    &-links {
+      gap: 12px;
+
+      .ant-typography {
+        font-size: 11px;
+      }
+    }
+
+    &-social {
+      gap: 10px;
+
+      .ant-typography .anticon {
+        font-size: 14px;
       }
     }
   }

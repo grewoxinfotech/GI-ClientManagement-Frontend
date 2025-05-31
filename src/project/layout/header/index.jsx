@@ -15,13 +15,14 @@ import {
     RiTeamLine,
     RiShieldLine,
     RiGroupLine,
-    RiSettings3Line
+    RiSettings3Line,
+    RiMenuLine
 } from 'react-icons/ri';
 
 import ThemeDrawer from '../../../common/theme/ThemeDrawer';
 import './styles.scss';
 
-const DashboardHeader = ({ collapsed, setCollapsed }) => {
+const DashboardHeader = ({ collapsed, setCollapsed, isMobile }) => {
     const navigate = useNavigate();
     const user = useSelector(selectCurrentUser);
     const userRole = useSelector(selectUserRole);
@@ -97,18 +98,20 @@ const DashboardHeader = ({ collapsed, setCollapsed }) => {
     return (
         <>
             <motion.div
-                className="dashboard-header"
+                className={`dashboard-header ${isMobile ? 'mobile-header' : ''}`}
                 initial={false}
                 animate={{
-                    width: `calc(100% - ${collapsed ? '80px' : '256px'})`,
+                    width: isMobile ? '100%' : `calc(100% - ${collapsed ? '80px' : '256px'})`,
                     transition: { duration: 0.2, ease: [0.4, 0, 0.2, 1] }
                 }}
             >
                 <Button
                     type="text"
-                    icon={collapsed ?
-                        <RiMenuUnfoldLine className="toggle-icon" /> :
-                        <RiMenuFoldLine className="toggle-icon" />
+                    icon={isMobile ?
+                        <RiMenuLine className="toggle-icon" /> :
+                        (collapsed ?
+                            <RiMenuUnfoldLine className="toggle-icon" /> :
+                            <RiMenuFoldLine className="toggle-icon" />)
                     }
                     onClick={() => setCollapsed(!collapsed)}
                     className="dashboard-header-toggle"
@@ -116,13 +119,16 @@ const DashboardHeader = ({ collapsed, setCollapsed }) => {
 
                 <div className="dashboard-header-actions">
                     <Dropdown
-                        menu={{ items: notificationItems }}
+                        menu={{
+                            items: notificationItems,
+                            className: 'notification-dropdown'
+                        }}
                         placement="bottomRight"
                         arrow
                         trigger={['click']}
                     >
                         <div className="dashboard-header-notification">
-                            <Badge count={5}>
+                            <Badge count={5} size={isMobile ? 'small' : 'default'}>
                                 <RiNotification3Line className="notification-icon" />
                             </Badge>
                         </div>
@@ -136,11 +142,11 @@ const DashboardHeader = ({ collapsed, setCollapsed }) => {
                     >
                         <div className="dashboard-header-profile">
                             <Avatar
-                                size={36}
+                                size={isMobile ? 32 : 36}
                                 icon={<RiUser3Line />}
                                 className="dashboard-header-avatar"
                             />
-                            {!collapsed && (
+                            {!isMobile && !collapsed && (
                                 <span className="dashboard-header-username" style={{ marginLeft: '12px' }}>
                                     {user?.username || 'User'}
                                 </span>

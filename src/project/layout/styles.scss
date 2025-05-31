@@ -2,35 +2,43 @@
 
 .dashboard-layout {
     min-height: 100vh;
-    background: $gradient-secondary;
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow-x: hidden;
 
     &-main {
         margin-left: $sidebar-collapsed-width;
         transition: $transition-default;
-        background: $gradient-secondary;
         flex: 1;
         display: flex;
         flex-direction: column;
-        min-height: 0; // Important for proper flex behavior
+        min-height: 0;
 
         &.expanded {
             margin-left: $sidebar-width;
         }
+
+        @media (max-width: 1024px) {
+            margin-left: 0 !important;
+            width: 100%;
+        }
+    }
+
+    .dashboard-content-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding-top: $header-height;
+        overflow: hidden;
     }
 
     &-content {
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
-        margin: 12px;
-        padding: 16px;
-        margin-top: $header-height + 12px;
-        margin-bottom: 12px;
-        transition: $transition-default;
-        height: calc(100vh - $header-height - 24px);
         position: relative;
+        padding: 24px;
 
         &::-webkit-scrollbar {
             width: 6px;
@@ -52,27 +60,47 @@
 }
 
 // Footer styles
-.footer {
-    margin-top: auto;
-    padding: 16px 24px;
-    background: transparent;
-    position: sticky;
-    bottom: 0;
+.dashboard-footer {
+    width: 100%;
     z-index: 10;
 }
 
+// Mobile drawer styles
+.mobile-sidebar-drawer {
+    .ant-drawer-content-wrapper {
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .ant-drawer-body {
+        padding: 0;
+    }
+}
+
 // Responsive styles
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 1024px) {
     .dashboard-layout {
         &-main {
             margin-left: 0 !important;
         }
 
-        &-content {
-            margin: 8px;
-            padding: 12px;
-            margin-top: $header-height + 8px;
-            height: calc(100vh - $header-height - 16px);
+        .dashboard-content-wrapper {
+            padding-top: $header-height;
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .dashboard-layout {
+        .dashboard-content-wrapper {
+            padding-top: $header-height - 4px;
+        }
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .dashboard-layout {
+        .dashboard-content-wrapper {
+            padding-top: $header-height - 6px;
         }
     }
 }
