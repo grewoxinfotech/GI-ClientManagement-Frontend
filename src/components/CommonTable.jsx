@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Table, Dropdown, Input, Button, Space, Empty } from 'antd';
 import { SearchOutlined, MoreOutlined, FilterOutlined } from '@ant-design/icons';
 
@@ -19,6 +19,16 @@ const CommonTable = ({
 }) => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+    const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 768);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     const formatDate = (timestamp) => {
         if (!timestamp) return 'N/A';
@@ -130,32 +140,36 @@ const CommonTable = ({
 
     return (
         <div className="common-table">
-            <Table
-                columns={enhancedColumns}
-                dataSource={data}
-                rowKey="id"
-                loading={isLoading}
-                onChange={(newPagination, filters, sorter) => {
-                    pagination.onChange(newPagination.current, newPagination.pageSize);
-                }}
-                pagination={{
-                    current: pagination.current,
-                    pageSize: pagination.pageSize,
-                    total: pagination.total,
-                    showSizeChanger: true,
-                    showTotal: (total) => `Total ${total} ${extraProps.itemName || 'items'}`,
-                    showQuickJumper: true
-                }}
-                locale={{
-                    emptyText: (
-                        <Empty
-                            image={Empty.PRESENTED_IMAGE_SIMPLE}
-                            description={`No ${extraProps.itemName || 'items'} found`}
-                        />
-                    )
-                }}
-                {...extraProps}
-            />
+            <div className="table-scroll-container">
+                <Table
+                    columns={enhancedColumns}
+                    dataSource={data}
+                    rowKey="id"
+                    loading={isLoading}
+                    onChange={(newPagination, filters, sorter) => {
+                        pagination.onChange(newPagination.current, newPagination.pageSize);
+                    }}
+                    pagination={{
+                        current: pagination.current,
+                        pageSize: pagination.pageSize,
+                        total: pagination.total,
+                        showSizeChanger: true,
+                        showTotal: (total) => `Total ${total} ${extraProps.itemName || 'items'}`,
+                        showQuickJumper: true,
+                        position: isMobile ? ['bottomCenter'] : ['bottomRight']
+                    }}
+                    locale={{
+                        emptyText: (
+                            <Empty
+                                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                description={`No ${extraProps.itemName || 'items'} found`}
+                            />
+                        )
+                    }}
+                    scroll={{ x: 'max-content' }}
+                    {...extraProps}
+                />
+            </div>
         </div>
     );
 };

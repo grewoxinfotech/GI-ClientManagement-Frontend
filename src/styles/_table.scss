@@ -136,3 +136,55 @@
         border-radius: 4px;
     }
 }
+
+// Common Table Component Styles
+.common-table {
+    width: 100%;
+
+    .table-scroll-container {
+        width: 100%;
+        overflow-x: auto;
+
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+
+        &::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+
+            &:hover {
+                background: var(--text-secondary);
+            }
+        }
+    }
+
+    .ant-table-wrapper {
+        width: 100%;
+    }
+
+    // Responsive pagination
+    @media (max-width: 768px) {
+        .ant-pagination {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+
+
+            &-options {
+                margin-top: 8px;
+            }
+
+            &-total-text {
+                width: 100%;
+                text-align: center;
+                margin: 0 !important;
+            }
+        }
+    }
+}

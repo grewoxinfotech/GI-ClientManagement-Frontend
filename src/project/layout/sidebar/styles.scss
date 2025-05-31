@@ -494,6 +494,57 @@
     }
 }
 
+// CRM Popover Menu Styles
+.crm-sidebar-popover {
+    .ant-popover-inner {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .ant-popover-inner-content {
+        padding: 0;
+    }
+
+    .ant-popover-arrow {
+        display: none;
+    }
+}
+
+.crm-popover-menu {
+    min-width: 180px;
+    background: var(--bg-primary);
+}
+
+.crm-popover-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-secondary);
+
+    &:hover {
+        background: var(--primary-light);
+        color: var(--primary-color);
+    }
+
+    &.active {
+        background: $gradient-primary;
+        color: var(--white);
+    }
+
+    svg {
+        font-size: 18px;
+        margin-right: 12px;
+    }
+
+    span {
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+
 .ant-menu-submenu-popup {
     width: 0% !important;
 }

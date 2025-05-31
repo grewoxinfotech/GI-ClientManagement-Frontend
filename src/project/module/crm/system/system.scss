@@ -12,10 +12,31 @@
         width: 100%;
     }
 
+    .menu-container {
+        @media (max-width: 1024px) {
+            border-radius: $border-radius $border-radius 0 0;
+            background: white;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+            margin-bottom: 16px;
+            position: relative;
+            z-index: 10;
+
+            &::after {
+                content: '';
+                position: absolute;
+                bottom: -1px;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: linear-gradient(to right, rgba(0, 0, 0, 0.05), rgba($primary-color, 0.2), rgba(0, 0, 0, 0.05));
+            }
+        }
+    }
+
     .system-menu {
-        min-width: 200px;
+        min-width: 300px;
         max-width: 300px;
-        width: 200px;
+        width: 300px;
         height: 100%;
         background: $bg-primary !important;
         border-radius: $border-radius;
@@ -267,6 +288,25 @@
 
     .ant-pagination {
         margin-top: 0;
+    }
+
+    @media (max-width: 768px) {
+        .ant-pagination {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            &-options {
+                margin-top: 8px;
+            }
+
+            &-total-text {
+                width: 100%;
+                text-align: center;
+                margin: 0 !important;
+            }
+        }
     }
 }
 

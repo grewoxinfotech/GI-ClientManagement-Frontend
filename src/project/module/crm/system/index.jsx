@@ -175,29 +175,35 @@ const System = () => {
                 width: '100%',
                 maxWidth: '100%',
                 background: 'white',
-                borderRadius: '8px 8px 0 0',
                 padding: '0',
                 overflow: 'hidden',
-                borderBottom: '1px solid #eaeaea'
+                borderBottom: '1px solid #eaeaea',
+                borderRadius: '8px 8px 0 0',
+                boxShadow: '0 1px 4px rgba(0, 0, 0, 0.05)',
+                marginBottom: '16px'
             };
         }
         return {
-            width: '200px',
-            minWidth: '200px',
+            width: '300px',
+            minWidth: '300px',
             height: '100%'
         };
     };
 
     return (
         <div className="system-container">
-            <div style={getMenuContainerStyle()}>
+            <div style={getMenuContainerStyle()} className="menu-container">
                 <Menu
                     mode={menuMode}
                     className="system-menu"
                     selectedKeys={[currentModule?.key || 'pipeline']}
                     disabledOverflow={true}
                     overflowedIndicator={null}
-                    style={{ paddingLeft: isMobileView ? 0 : '14px', width: '100%' }}
+                    style={{
+                        paddingLeft: isMobileView ? 0 : '14px',
+                        width: '100%',
+                        borderBottom: 'none'
+                    }}
                     items={Object.values(SYSTEM_MODULES).map(module => ({
                         key: module.key,
                         icon: module.icon,
